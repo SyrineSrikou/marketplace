@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content%}
+
+<!-- Page Title-->
+ <div class="page-title-overlap bg-dark pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="index.html"><i class="ci-home"></i>Home</a></li>
+            <li class="breadcrumb-item text-nowrap"><a href="#">Account</a>
+            </li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">Profile info</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+        <h1 class="h3 text-light mb-0">Profile info</h1>
+      </div>
+    </div>
+  </div>
+  <div class="container pb-5 mb-2 mb-md-4">
+    <div class="row">
+      <!-- Sidebar-->
+      <aside class="col-lg-4 pt-4 pt-lg-0 pe-xl-5">
+        <div class="bg-white rounded-3 shadow-lg pt-1 mb-5 mb-lg-0">
+          <div class="d-md-flex justify-content-between align-items-center text-center text-md-start p-4">
+            <div class="d-md-flex align-items-center">
+              <div class="img-thumbnail rounded-circle position-relative flex-shrink-0 mx-auto mb-2 mx-md-0 mb-md-0" style="width: 6.375rem;"><img class="rounded-circle" src="{{request.user.userprofile.profile_picture.url}}" alt="Susan Gardner"></div>
+              <div class="ps-md-3">
+                <h3 class="fs-base mb-0">{{user.username}}</h3><span class="text-accent fs-sm">{{user.email}}</span>
+              </div>
+            </div><a class="btn btn-primary d-lg-none mb-2 mt-3 mt-md-0" href="#account-menu" data-bs-toggle="collapse" aria-expanded="false"><i class="ci-menu me-2"></i>Account menu</a>
+          </div>
+          <div class="d-lg-block collapse" id="account-menu">
+            <div class="bg-secondary px-4 py-3">
+              <h3 class="fs-sm mb-0 text-muted">Account settings</h3>
+            </div>
+            <ul class="list-unstyled mb-0">
+              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active" href="{% url 'dashboard:edit_profile' %}"><i class="ci-user opacity-60 me-2"></i>Profile info</a></li>
+              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="#"><i class="ci-location opacity-60 me-2"></i>Addresses</a></li>
+              <li class="mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="#"><i class="ci-card opacity-60 me-2"></i>Payment methods</a></li>
+              <li class="d-lg-none border-top mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="{% url 'accounts:logout' %}"><i class="ci-sign-out opacity-60 me-2"></i>Sign out</a></li>
+            </ul>
+            <div class="bg-secondary px-4 py-3">
+              <h3 class="fs-sm mb-0 text-muted">Dashboard</h3>
+            </div>
+            <ul class="list-unstyled mb-0">
+              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="{% url 'dashboard:stores' %}"><i class="ci-bag opacity-60 me-2"></i>Stores<span class="fs-sm text-muted ms-auto">1</span></a></li>
+              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="{% url 'dashboard:orders' %}"><i class="ci-bag opacity-60 me-2"></i>Orders<span class="fs-sm text-muted ms-auto">1</span></a></li>
+              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="{% url 'dashboard:wishlist' %}"><i class="ci-heart opacity-60 me-2"></i>Wishlist<span class="fs-sm text-muted ms-auto">3</span></a></li>
+              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="{% url 'support:tickets' %}"><i class="ci-help opacity-60 me-2"></i>My tickets<span class="fs-sm text-muted ms-auto">1</span></a></li>
+              <li class="mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="{% url 'store:create_store' %}"><i class="ci-help opacity-60 me-2"></i>become vendor </a></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+      
+      <!-- Content  -->
+      <section class="col-lg-8">
+        <!-- Toolbar-->
+        <div class="d-flex justify-content-between align-items-center pt-lg-2 pb-4 pb-lg-5 mb-lg-3">
+          <div class="d-flex align-items-center">
+            <label class="d-none d-lg-block fs-sm text-light text-nowrap opacity-75 me-2" for="order-sort">Sort orders:</label>
+            <label class="d-lg-none fs-sm text-nowrap opacity-75 me-2" for="order-sort">Sort orders:</label>
+            <select class="form-select" id="order-sort">
+              <option>All</option>
+              <option>Delivered</option>
+              <option>In Progress</option>
+              <option>Delayed</option>
+              <option>Canceled</option>
+            </select>
+          </div><a class="btn btn-primary btn-sm d-none d-lg-inline-block" href="account-signin.html"><i class="ci-sign-out me-2"></i>Sign out</a>
+        </div>
+        <!-- Orders list-->
+        <div class="table-responsive fs-md mb-4">
+          {%if orders%}
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Date Purchased</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Detail</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+              <tr>
+                <td class="py-3"><a class="nav-link-style fw-medium fs-sm" href="#" data-bs-toggle="modal">{{order.order_number}}</a></td>
+                <td class="py-3">{{order.created_at|timesince}} ago</td>
+                <td class="py-3"><span class="badge bg-info m-0">{{order.status}}</span></td>
+                <td class="py-3">{{order.paid_amount}} TND</td>
+                <td><a href="{% url 'dashboard:user_order_details' order.pk %}"> <span class="badge bg-info m-0">detail</span></a></td>
+                <td><a href="#"> <span class="badge bg-info m-0">Download</span></a></td>
+              </tr>
+              {% endfor%}   
+            </tbody>
+          </table>
+          {%else%}
+            <h3>you have no orders yet</h3>
+          {%endif%}
+        </div>
+        <!-- Pagination-->
+        <div class="row" >
+          <div class="col-md-12">
+            {% if orders.has_other_pages %}
+              <ul class="pagination justify-content-center">
+                {% if orders.has_previous %}
+                  <li class="page-item">
+                    <a href="?page={{orders.previous_page_number}}" class="page-link">&laquo;</a>
+                  </li>
+                {% else %}
+                  <li class="page-item disabled">
+                    <a class="page-link">&laquo;</a>
+                  </li>
+                {% endif %}
+                {% for i in orders.paginator.page_range %}
+                  {% if orders.number == i %}
+                    <li class="page-item active">
+                      <a class="page-link">{{i}}</a>
+                    </li>
+                  {% else %}
+                    <li class="page-item">
+                      <a href="?page={{i}}" class="page-link">{{i}}</a>
+                    </li>
+                  {% endif %}
+                {% endfor %}
+                {% if orders.has_next %}
+                  <li class="page-item">
+                    <a href="?page={{orders.next_page_number}}" class="page-link">&raquo;</a>
+                  </li>
+                {% else %}
+                  <li class="page-item disabled">
+                    <a class="page-link">&raquo;</a>
+                  </li>
+                {% endif %}
+              </ul>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  {% endblock %}

@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <!-- Page Title-->
+  <div class="page-title-overlap bg-dark pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="index.html"><i class="ci-home"></i>Home</a></li>
+            <li class="breadcrumb-item text-nowrap"><a href="shop-grid-ls.html">Shop</a>
+            </li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">Checkout</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+        <h1 class="h3 text-light mb-0">Checkout</h1>
+      </div>
+    </div>
+  </div>
+  <div class="container pb-5 mb-2 mb-md-4">
+    <div class="row">
+      <section class="col-lg-8">
+        <!-- Steps-->
+        <div class="steps steps-light pt-2 pb-3 mb-3"><a class="step-item active" href="shop-cart.html">
+            <div class="step-progress"><span class="step-count">1</span></div>
+            <div class="step-label"><i class="ci-cart"></i>Cart</div></a><a class="step-item active" href="checkout-details.html">
+            <div class="step-progress"><span class="step-count">2</span></div>
+            <div class="step-label"><i class="ci-user-circle"></i>Details</div></a><a class="step-item active" href="checkout-shipping.html">
+            <div class="step-progress"><span class="step-count">3</span></div>
+            <div class="step-label"><i class="ci-package"></i>Review</div></a>
+        </div>
+
+        <!-- Client details-->
+        <div class="bg-secondary rounded-3 px-4 pt-4 pb-3">
+            <div class="row">
+              <div class="col-sm-6">
+                <h4 class="h6">Shipping to:</h4>
+                <ul class="list-unstyled fs-sm">
+                <li><span class="text-muted">                    <div class="img-thumbnail rounded-circle position-relative flex-shrink-0 mx-auto mb-2 mx-md-0 mb-md-0" style="width: 6.375rem;"><img class="rounded-circle" src="{{request.user.userprofile.profile_picture.url}}" alt="user picture"></div>
+                </li>
+
+
+                  <li><span class="text-muted">Client:&nbsp;</span>{{user.username}}</li>
+                  <li><span class="text-muted">Full Name:&nbsp;</span>{{user.last_name}} {{user.first_name}}</li>
+                  <li><span class="text-muted">Email Address:&nbsp;</span>{{user.email}}</li>
+                  <li><span class="text-muted">Phone:&nbsp;</span>{{user.phone_number}}</li>
+
+                </ul>
+              </div>
+              <div class="col-sm-6">
+                <h4 class="h6">Address:</h4>
+                {% if address %}
+                <small>Note : your default address has been attributed to your order !</small>
+                <br>
+                <a href="{% url 'dashboard:addresses' %}"><button class="badge btn btn-primary text-center w-100"> Change default address</button></a>
+                <br>
+                <br>
+                <ul class="list-unstyled fs-sm">
+                    <li><span class="text-muted">Address:&nbsp;</span>{{address.address_line1}} </li>
+                    <li>{{address.address_line2}}</li>
+                    <li><span class="text-muted">City:&nbsp;</span>{{address.city}} </li>
+                    <li><span class="text-muted">Country:&nbsp;</span>{{address.country}} </li>
+                    <li><span class="text-muted">Zipcode:&nbsp;</span>{{address.zipcode}} </li>
+
+
+                </ul>
+                {% else %}
+                <div>you have to add your address to complete and place your order ! Please add one : </div>
+                <br>
+                <a href="{% url 'dashboard:add_address' %}"><button class="btn btn-primary w-100"> Add Address</button></a>
+                {%endif%}
+            </div>
+            </div>
+          </div>
+
+        <!-- Order details-->
+        <h2 class="h6 pt-4 pb-3 mb-3 border-bottom">Review your order</h2>
+        {% for item in cart %}
+          <div class="d-sm-flex justify-content-between align-items-center my-2 pb-3 border-bottom">
+            <div class="d-block d-sm-flex align-items-center text-center text-sm-start"><a class="d-inline-block flex-shrink-0 mx-auto me-sm-4" href="shop-single-v1.html"><img src="{{item.product.get_thumbnail}}" width="100" alt="Product"></a>
+              <div class="pt-2">
+                <h3 class="product-title fs-base mb-2"><a href="shop-single-v1.html">{{item.product.name}}</a></h3>
+                <span class="text-muted">Quantity:&nbsp;</span>{{item.quantity}}
+
+                <div class="fs-lg text-accent pt-2"> {{item.product.price|floatformat:3}}TND</div>
+              </div>
+            </div>
+            
+            <div class="pt-2 pt-sm-0 ps-sm-3 mx-auto mx-sm-0 text-center text-sm-start" style="max-width: 9rem;">
+              <label class="form-label" for="quantity1">Subtotal </label>
+              <div class="fs-lg text-accent pt-2"> {{ item.total_price|floatformat:3}}TND</div>
+            </div>
+          </div>
+                        
+          {% endfor %}
+        
+          <section>
+   
+
+            <form method="post" action="." >
+                {% csrf_token %}    
+        
+                {% if form.non_field_errors %}
+                    <div class="notification is-danger">
+                        {{ form.non_field_errors}}
+                    </div>
+                {% endif %}
+        
+                {% if form.errors %}
+                    <div class="notification is-danger">
+                        <ul>
+                            {% for field in form %}
+                                {% for error in field.errors %}
+                                    <li><strong>{{ field.label }}: </strong>{{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+        
+                <div class="columns">
+                    <div class="column is-6">
+                        <div class="field">
+                            <label> <h2 class="h6 pt-4  mb-3 ">Add you order note </h2></label> <br>  
+                            <span class="text-muted">Not required !</span>
+                            <textarea class="form-control" type="text" name="order_note" > </textarea> 
+                        </div>
+                        <div class="d-none d-lg-flex pt-4">
+                            <div class="d-block w-100 mt-4"><a class="btn btn-secondary d-block w-100" href="{% url 'cart:cart_detail' %}"><i class="ci-arrow-left mt-sm-0 me-1"></i><span class="d-none d-sm-inline">Back Shopping Cart</span><span class="d-inline d-sm-none">Back</span></a></div>
+                            
+                        </div>
+                <div class="field">
+                    <div class="control">
+                        <button class="btn btn-primary d-block w-100 mt-4 is-uppercase">Checkout</button>
+                    </div>
+                </div>
+            </div>
+          </section>
+        <!-- Navigation (desktop)-->
+        
+      </section>
+      <!-- Sidebar-->
+      <aside class="col-lg-4 pt-4 pt-lg-0 ps-xl-5">
+        <div class="bg-white rounded-3 shadow-lg p-4 ms-lg-auto">
+          <div class="py-2 px-xl-2">
+            <h2 class="h6 text-center mb-4">Order summary</h2>
+            <ul class="list-unstyled fs-sm pb-2 border-bottom">
+              <li class="d-flex justify-content-between align-items-center"><span class="me-2">Subtotal:</span><span class="text-end">{{cart.get_total_cost }} TND</span></li>
+              <li class="d-flex justify-content-between align-items-center"><span class="me-2">Shipping:</span><span class="text-end">—</span></li>
+              <li class="d-flex justify-content-between align-items-center"><span class="me-2">Discount:</span><span class="text-end">—</span></li>
+            </ul>
+            <h3 class="fw-normal text-center my-4">{{cart.get_total_cost }} TND</h3>
+            
+          </div>
+        </div>
+      </aside>
+    </div>
+       
+    
+  </div>
+
+{% endblock  %}
+
+
+
+
+

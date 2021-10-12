@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <!-- Hero section-->
+    <section class="bg-accent bg-position-top-center bg-repeat-0 py-5" style="background-image: url(static/img/marketplace/features/features-bg.jpg);">
+        <div class="pb-lg-5 mb-lg-3">
+          <div class="container py-lg-5 my-lg-5">
+            <div class="container pt-lg-3">
+              <h2 class="h3 mb-3 pb-4 text-light text-center">Why our marketplace?</h2>
+              <div class="row pt-lg-2 text-center">
+                <div class="col-lg-3 col-sm-6 mb-grid-gutter">
+                  <div class="d-inline-flex align-items-center text-start"><img src="static/img/marketplace/features/quality.png" width="52" alt="Quality Guarantee">
+                    <div class="ps-3">
+                      <h6 class="text-light fs-base mb-1">Quality Guarantee</h6>
+                      <p class="text-light fs-ms opacity-70 mb-0">Quality checked by our team</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 mb-grid-gutter">
+                  <div class="d-inline-flex align-items-center text-start"><img src="static/img/marketplace/features/support.png" width="52" alt="Customer Support">
+                    <div class="ps-3">
+                      <h6 class="text-light fs-base mb-1">Customer Support</h6>
+                      <p class="text-light fs-ms opacity-70 mb-0">Friendly 24/7 customer support</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 mb-grid-gutter">
+                  <div class="d-inline-flex align-items-center text-start"><img src="static/img/marketplace/features/updates.png" width="52" alt="Free Updates">
+                    <div class="ps-3">
+                      <h6 class="text-light fs-base mb-1">Lifetime Free Updates</h6>
+                      <p class="text-light fs-ms opacity-70 mb-0">Never pay for an update</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 mb-grid-gutter">
+                  <div class="d-inline-flex align-items-center text-start"><img src="static/img/marketplace/features/secure.png" width="52" alt="Secure Payments">
+                    <div class="ps-3">
+                      <h6 class="text-light fs-base mb-1">Secure Payments</h6>
+                      <p class="text-light fs-ms opacity-70 mb-0">We posess SSL / Secure сertificate</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+          </div>
+        </div>
+      </section>
+    <!-- Featured products (Carousel)-->
+    <section class="container position-relative pt-3 pt-lg-0 pb-5 mt-lg-n10" style="z-index: 10;">
+      <div class="card px-lg-2 border-0 shadow-lg">
+        <div class="card-body px-4 pt-5 pb-4">
+          <h2 class="h3 text-center">Discover featured products</h2>
+          <p class="text-muted text-center">Every week we hand-pick some of the best items from our collection</p>
+        </div>
+        <div class="row pt-3 mx-n2">
+          {% for p in featuredproducts %}
+        <!-- Product-->
+        <div class="col-lg-3 col-md-4 col-sm-6 px-2 mb-grid-gutter">
+          <div class="card product-card-alt">
+            <div class="product-thumb">
+              <button class="btn-wishlist btn-sm" type="button"><i class="ci-heart"></i></button>
+              <div class="product-card-actions"><a class="btn btn-light btn-icon btn-shadow fs-base mx-2" href="marketplace-single.html"><i class="ci-eye"></i></a>
+                <button class="btn btn-light btn-icon btn-shadow fs-base mx-2" type="button"><i class="ci-cart"></i></button>
+              </div><a class="product-thumb-overlay" href="marketplace-single.html"></a><img src="{{p.image.url}}" alt="Product">
+            </div>
+            <div class="card-body">
+              <div class="d-flex flex-wrap justify-content-between align-items-start pb-2">
+                <div class="text-muted fs-xs me-1"><a class="product-meta fw-medium" href="#">{{p.category}}</a> <a class="product-meta fw-medium" href="#">Category</a></div>
+                </div>
+                <div class="star-rating"><div class="rating-star">
+                  <span>
+                    <i class="fa fa-star{% if p.averageReview < 0.5 %}-o{% elif p.averageReview >= 0.5 and p.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+                    <i class="fa fa-star{% if p.averageReview < 1.5 %}-o{% elif p.averageReview >= 1.5 and p.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+                    <i class="fa fa-star{% if p.averageReview < 2.5 %}-o{% elif p.averageReview >= 2.5 and p.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+                    <i class="fa fa-star{% if p.averageReview < 3.5 %}-o{% elif p.averageReview >= 3.5 and p.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+                    <i class="fa fa-star{% if p.averageReview < 4.5 %}-o{% elif p.averageReview >= 4.5 and p.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+                    </span>
+                </div>    
+              </div>
+              <h3 class="product-title fs-sm mb-2"><a href="marketplace-single.html">{{p.name}}</a></h3>
+              <div class="d-flex flex-wrap justify-content-between align-items-center">
+                <div class="text-muted fs-xs me-1">by <a class="product-meta fw-medium" href="#">{{p.added_by.first_name}} {{p.added_by.last_name}} </a>in <a class="product-meta fw-medium" href="#">{{p.store|title}}</a></div>
+
+                <div class="bg-faded-accent text-accent rounded-1 py-1 px-2">{{p.price}} TND</div>
+              </div>
+            </div>
+          </div>
+        </div>
+       
+        {%endfor%}
+        </div>
+      </div>
+        </div>
+      </div>
+    </section>
+   <!-- Recent products grid-->
+   <section class="container pb-5 mb-lg-3">
+    <!-- Heading-->
+    <div class="d-flex flex-wrap justify-content-between align-items-center pt-1 border-bottom pb-4 mb-4">
+      <h2 class="h3 mb-0 pt-3 me-2">The most recent products</h2>
+    </div>
+    <div class="row pt-4 mx-n2">
+      <!-- Product-->
+      {% for product in products %}
+      <div class="col-lg-3 col-md-4 col-sm-6 px-2 mb-4">
+        
+        <div class="card product-card">
+          <button class="btn-wishlist btn-sm" type="button" data-bs-toggle="tooltip" data-bs-placement="left" title="Add to wishlist"><a href="{% url 'dashboard:user_wishlist' product.id  %}"><i class="ci-heart"></i></a></button><a class="card-img-top d-block overflow-hidden" href="{% url 'discover:product_detail' product.category.slug product.slug %}"><img src="{{product.image.url}}"  alt="Product" width="auto" height="auto"></a>
+          <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="#">{{product.category}}</a>
+            <h3 class="product-title fs-sm"><a href="#">{{product.name}}</a></h3>
+            <div class="d-flex justify-content-between">
+              <div class="product-price"><span class="text-accent">{{product.price}}<small>TND</small></span></div>
+              <div class="star-rating"><div class="rating-star">
+                <span>
+                  <i class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+                  <i class="fa fa-star{% if product.averageReview < 1.5 %}-o{% elif product.averageReview >= 1.5 and product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+                  <i class="fa fa-star{% if product.averageReview < 2.5 %}-o{% elif product.averageReview >= 2.5 and product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+                  <i class="fa fa-star{% if product.averageReview < 3.5 %}-o{% elif product.averageReview >= 3.5 and product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+                  <i class="fa fa-star{% if product.averageReview < 4.5 %}-o{% elif product.averageReview >= 4.5 and product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+                  </span>
+              </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body card-body-hidden">
+            <form method="post" action="{% url 'discover:product_detail' product.category.slug product.slug %}">
+              {% csrf_token %}
+              <button class="btn btn-primary btn-sm d-block w-100 mb-2" type="button">
+                <i class="ci-cart fs-sm me-1"></i>Add to Cart
+              </button>
+            </form>
+          </div>
+        </div>
+        
+
+        <hr class="d-sm-none">
+      </div>
+      {%endfor%}
+
+     
+    </div>
+    <div class="text-center pt-3"><a class="btn btn-outline-accent" href="{% url 'discover:discover_page' %}">Discover<i class="ci-arrow-right ms-1"></i></a></div>
+  </section>
+  <!-- Product widgets-->
+  <section class="container pt-md-3 pb-4 pb-md-5 mb-lg-2">
+    <div class="row">
+      <div class="col-lg-4 col-md-6 mb-2 py-3">
+        <div class="widget">
+          <h3 class="widget-title">Bestsellers</h3>
+          <div class="d-flex align-items-center pb-2 border-bottom"><a class="d-block" href="shop-single-v1.html"><img src="/static/img/shop/cart/widget/01.jpg" width="64" alt="Product"></a>
+            <div class="ps-2">
+              <h6 class="widget-product-title"><a href="shop-single-v1.html">Women Colorblock Sneakers</a></h6>
+              <div class="widget-product-meta"><span class="text-accent me-2">$150.<small>00</small></span></div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center py-2 border-bottom"><a class="d-block" href="shop-single-v1.html"><img src="/static/img/shop/cart/widget/02.jpg" width="64" alt="Product"></a>
+            <div class="ps-2">
+              <h6 class="widget-product-title"><a href="shop-single-v1.html">TH Jeans City Backpack</a></h6>
+              <div class="widget-product-meta"><span class="text-accent me-2">$79.<small>50</small></span></div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center py-2 border-bottom"><a class="d-block" href="shop-single-v1.html"><img src="/static/img/shop/cart/widget/03.jpg" width="64" alt="Product"></a>
+            <div class="ps-2">
+              <h6 class="widget-product-title"><a href="shop-single-v1.html">3-Color Sun Stash Hat</a></h6>
+              <div class="widget-product-meta"><span class="text-accent me-2">$22.<small>50</small></span></div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center py-2"><a class="d-block" href="shop-single-v1.html"><img src="/static/img/shop/cart/widget/04.jpg" width="64" alt="Product"></a>
+            <div class="ps-2">
+              <h6 class="widget-product-title"><a href="shop-single-v1.html">Cotton Polo Regular Fit</a></h6>
+              <div class="widget-product-meta"><span class="text-accent me-2">$9.<small>00</small></span></div>
+            </div>
+          </div>
+          <p class="mb-0">...</p><a class="fs-sm" href="shop-grid-ls.html">View more<i class="ci-arrow-right fs-xs ms-1"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-2 py-3">
+        <div class="widget">
+          <h3 class="widget-title">New arrivals</h3>
+          <div class="d-flex align-items-center pb-2 border-bottom"><a class="d-block" href="shop-single-v1.html"><img src="/static/img/shop/widget/02.jpg" width="64" alt="Product"></a>
+            <div class="ps-2">
+              <h6 class="widget-product-title"><a href="shop-single-v1.html">Cap with Appliqué</a></h6>
+              <div class="widget-product-meta"><span class="text-accent me-2">$15.<small>99</small></span></div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center py-2 border-bottom"><a class="d-block" href="shop-single-v1.html"><img src="/static/img/shop/widget/01.jpg" width="64" alt="Product"></a>
+            <div class="ps-2">
+              <h6 class="widget-product-title"><a href="shop-single-v1.html">Girl's T-shirt with Motif</a></h6>
+              <div class="widget-product-meta"><span class="text-accent me-2">$14.<small>50</small></span></div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center py-2 border-bottom"><a class="d-block" href="shop-single-v1.html"><img src="/static/img/shop/widget/03.jpg" width="64" alt="Product"></a>
+            <div class="ps-2">
+              <h6 class="widget-product-title"><a href="shop-single-v1.html">Leather Platform Sandals</a></h6>
+              <div class="widget-product-meta"><span class="text-accent me-2">$78.<small>00</small></span></div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center py-2"><a class="d-block" href="shop-single-v1.html"><img src="/static/img/shop/widget/04.jpg" width="64" alt="Product"></a>
+            <div class="ps-2">
+              <h6 class="widget-product-title"><a href="shop-single-v1.html">Regular Fit Cotton Shirt</a></h6>
+              <div class="widget-product-meta"><span class="text-accent me-2">$17.<small>99</small></span></div>
+            </div>
+          </div>
+          <p class="mb-0">...</p><a class="fs-sm" href="shop-grid-ls.html">View more<i class="ci-arrow-right fs-xs ms-1"></i></a>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-6 d-none d-lg-block"><a class="d-block" href="shop-grid-ls.html"><img class="d-block rounded-3" src="/static/img/home/banners/v-banner.jpg" alt="Promo banner"></a></div>
+    </div>
+  </section>
+  
+
+<!-- Blog posts carousel-->
+<section class="py-5">
+  <div class="container py-lg-3">
+    <h2 class="h3 text-center">From the blog</h2>
+    <p class="text-muted text-center mb-3 pb-4">Latest marketplace news, success stories and tutorials</p>
+    <div class="row py-5">
+      {% for blogpost in featuredblogposts %}
+      <div class="col-lg-4">
+        <div class="card"><a class="blog-entry-thumb" href="{% url 'blog:blogpost' blogpost.slug %}"><img class="card-img-top" src="{{blogpost.image.url}}" alt="Post"></a>
+          <div class="card-body">
+            <h2 class="h6 blog-entry-title"><a href="{% url 'blog:blogpost' blogpost.slug %}">{{blogpost.headline}}</a></h2>
+            <p class="fs-sm">{{blogpost.body|safe|truncatewords:15}}</p>            <div class="fs-xs text-nowrap"><a class="blog-entry-meta-link text-nowrap" href="#"><span class="day">{{blogpost.publish.day}} <span class="mos">{{blogpost.publish|date:'F'}}</span>  </span> <span class="yr">{{blogpost.publish.year}}</span></a><span class="blog-entry-meta-divider mx-2"></span><a class="blog-entry-meta-link text-nowrap" href="blog-single.html#comments"><i class="ci-message"></i>28</a></div>
+          </div>
+        </div>
+      </div>
+      
+      {% endfor %}
+    </div>
+  </div>
+
+<!-- end of featured -->
+<!-- Blog + Instagram info cards--> 
+<section class="container-fluid px-0">
+  <div class="row g-0">
+    <div class="col-md-6"><a class="card border-0 rounded-0 text-decoration-none py-md-4 bg-faded-primary" href="blog-list-sidebar.html">
+        <div class="card-body text-center"><i class="ci-edit h3 mt-2 mb-4 text-primary"></i>
+          <h3 class="h5 mb-1">Read more from the blog </h3>
+          <p class="text-muted fs-sm">Latest store, fashion news and trends</p>
+        </div></a></div>
+    <div class="col-md-6"><a class="card border-0 rounded-0 text-decoration-none py-md-4 bg-faded-accent" href="#">
+        <div class="card-body text-center"><i class="ci-instagram h3 mt-2 mb-4 text-accent"></i>
+          <h3 class="h5 mb-1">Follow on Instagram</h3>
+          <p class="text-muted fs-sm">#ShopWithCartzilla</p>
+        </div></a></div>
+  </div>
+</section>
+
+{% endblock %}

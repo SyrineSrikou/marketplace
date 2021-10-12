@@ -1,0 +1,52 @@
+ 
+{% extends 'base.html' %}
+
+{% block title %}All stores | {% endblock %}
+
+{% block content %}
+<!-- Item-->
+{% if stores %}
+<!-- Page Title (Light)-->
+<div class="bg-secondary py-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb flex-lg-nowrap justify-content-center justify-content-lg-start">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="index.html"><i class="ci-home"></i>Home</a></li>
+            <li class="breadcrumb-item text-nowrap"><a href="#">Stores</a>
+            </li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">All</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+        <h1 class="h3 mb-0">Marketplace stores</h1>
+      </div>
+    </div>
+  </div>
+  <div class="container pb-4 pb-sm-5">
+    <!-- stores grid-->
+    <div class="row pt-5">
+      <!-- Store-->
+      {% for store in stores %}
+      <div class="col-xl-3 col-lg-6 col-md-4 col-sm-6 px-2 mb-3">
+        <div class="card product-card card-static pb-3">
+          <a class="card-img-top d-block overflow-hidden" href="{% url 'store:single_store' store.slug %}"><img src="{{store.logo.url}}" alt="Product" width="250"></a>
+          <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1">By {{store.owner.first_name}} {{store.owner.last_name}}</a>
+            <h3 class="product-title fs-sm text-truncate"><a href="{% url 'store:single_store' store.slug %}">{{store.name}}</a></h3>
+          </div>
+          
+        </div>
+      </div>
+      {%endfor%}
+      </div>
+    </div>
+  </div>
+  {%else%}
+<h3> no store yet ! </h3>
+
+
+{%endif%}
+
+{% endblock %}
+

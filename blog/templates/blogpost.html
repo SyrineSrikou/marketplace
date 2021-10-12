@@ -1,0 +1,131 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container pb-5">
+    <div class="row justify-content-center pt-5 mt-md-2">
+      <div class="col-lg-9">
+        <!-- Post meta-->
+        <div class="d-flex flex-wrap justify-content-between align-items-center pb-4 mt-n1">
+          <div class="d-flex align-items-center fs-sm mb-2"><a class="blog-entry-meta-link" href="#"><h3>{{blogpost.headline}} </h3></span><span class="day">{{blogpost.publish.day}} <span class="mos">{{blogpost.publish|date:'F'}}</span>  </span> <span class="yr">{{blogpost.publish.year}}</span></div> 
+          <div class="d-flex  fs-sm mb-2"><a class="blog-entry-meta-link" href="#"></div>   
+          <div>
+            <div class="fs-sm mb-2"><a class="blog-entry-meta-link text-nowrap"  data-scroll><i class="ci-heart"></i>{{blogpost.total_likes}}</a></div>
+            <div class="fs-sm mb-2"><a class="blog-entry-meta-link text-nowrap" data-scroll><i class="ci-message"></i>{{comments.count}}</a></div>
+          </div>
+        </div>
+        
+        <!-- Gallery-->
+        <div class="gallery row pb-2">
+          <div class="col-sm-12"><a class="gallery-item rounded-3 mb-grid-gutter" href="{{blogpost.image.url}}" data-bs-sub-html="&lt;h6 class=&quot;fs-sm text-light&quot;&gt;Gallery image caption #1&lt;/h6&gt;"><img src="{{blogpost.image.url}}" alt="Gallery image"></a></div>
+        </div>
+        <!-- Post content-->
+        <div>
+          <p>
+            {{blogpost.body|safe}}
+          </p>
+        </div>
+        <br>
+        <form action="{% url 'blog:like' blogpost.slug %}" method="POST">
+          {% csrf_token %}
+            {% if user.is_authenticated %}
+            {% if liked %}
+                <button type="submit" class="btn btn-danger btn-sm" name="post_id" value="{{post.id}}">Unlike</button>
+            {% else %}
+                <button type="submit" class="btn btn-primary btn-sm" name="post_id" value="{{post.id}}">Like</button>
+            {%endif%}
+          {%else%}
+          <hr class="mt-5">
+
+            You must be Logged In to Like the post 
+          {%endif%}
+        </form>
+        
+        <hr class="mt-5">
+
+        <!-- Comments-->
+        <div class="pt-2 mt-5" id="comments">
+          <h2 class="h4">Comments<span class="badge bg-secondary fs-sm text-body align-middle ms-2">{{comments.count}}</span></h2>
+          {% if not blogpost.comments.all %}
+            {% for comment in comments %}
+            <!-- comment-->
+            <div class="d-flex align-items-start py-4"><img class="rounded-circle" src="{{comment.user.userprofile.profile_picture.url}}" width="50" alt="user profile picture">
+              <div class="ps-3">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <h6 class="fs-md mb-0">{{comment.user}}</h6>
+                </div>
+                <p class="fs-md mb-1">{{comment.comment}}</p><span class="fs-ms text-muted"><i class="ci-time align-middle me-2"></i>{{comment.created_at}}</span>
+              </div>
+            </div>
+            {%endfor%}
+
+          {%else%}
+            <p>not comments yet</p>
+          {%endif%}
+         
+          <!-- Post comment form-->
+          <div class="card border-0 shadow mt-2 mb-4">
+            <div class="card-body">
+              {% if user.is_authenticated %}
+              <div class="d-flex align-items-start"><img class="rounded-circle" src="{{request.user.userprofile.profile_picture.url}}" width="50" alt="Mary Alice">
+                <form  class="w-100 needs-validation ms-3" method="post"  action="{% url 'blog:add_comment' blogpost.slug %}" novalidate>
+                  {% csrf_token %}
+                  <div class="mb-3">
+                    <label class="form-label" for="comment-text">Comment<span class="text-danger"></span></label>
+                    <textarea class="form-control" rows="4" name="comment"  placeholder="Write your comment here ..." required></textarea>
+                    <div class="invalid-feedback">write a comment!</div>
+                  </div>
+                  <button class="btn btn-primary btn-sm" type="submit">Post comment</button> 
+                </form>
+              </div>
+              {% else %}
+                    <p>You must be logged in to add a comment. <span><a href="{% url 'accounts:login' %}">Login now</a></span></p>
+                  {% endif %}
+            </div>
+          </div>
+         
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Related posts-->
+  <div class="bg-secondary py-5">
+    <div class="container py-3">
+      <h2 class="h4 text-center pb-4">You may also like</h2>
+      <div class="container py-lg-3">
+            
+      
+            <div class="row py-5">
+              {% for blogpost in featuredblogposts %}
+              <div class="col-lg-4">
+                <div class="card"><a class="blog-entry-thumb" href="{% url 'blog:blogpost' blogpost.slug %}"><img class="card-img-top" src="{{blogpost.image.url}}" alt="Post"></a>
+                  <div class="card-body">
+                    <h2 class="h6 blog-entry-title"><a href="{% url 'blog:blogpost' blogpost.slug %}">{{blogpost.headline}}</a></h2>
+                    <p class="fs-sm">{{blogpost.body|safe|truncatewords:15}}</p>            <div class="fs-xs text-nowrap"><a class="blog-entry-meta-link text-nowrap" href="#"><span class="day">{{blogpost.publish.day}} <span class="mos">{{blogpost.publish|date:'F'}}</span>  </span> <span class="yr">{{blogpost.publish.year}}</span></a><span class="blog-entry-meta-divider mx-2"></span><a class="blog-entry-meta-link text-nowrap" href="blog-single.html#comments"><i class="ci-message"></i>28</a></div>
+                  </div>
+                </div>
+              </div>
+              
+              {% endfor %}
+            </div>
+          </div>
+        
+    </div>
+  </div>
+
+{% endblock %}
+
+<script>
+  function onClick() {
+    var i = document.getElementById('likes_id').value 
+    $.ajax({
+        url : "/ajax/likes/",
+        data : {'i':i},
+        dataType: 'json',
+        success: function(data){
+            document.getElementById('like').innerHTML = data.i
+        }
+    })
+}
+</script>

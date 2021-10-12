@@ -1,0 +1,26 @@
+{% extends 'admin-base.html' %}
+{% load static %}
+
+{% block content %}
+<div id="page-content">
+      <div class="header">
+
+<div>---------------------------------</div>
+{% for store in stores %}
+{{store.name}}
+{% endfor %}
+<div>---------------------------------</div>
+          {% if store_status == "Pending" %}
+
+                {{pending_stores.name}}
+
+          {% endif %}
+<div>---------------------------------</div>
+{% for rejstore in rejected_stores %}
+{{rejstore.name}}
+{% endfor %}
+<div>---------------------------------</div>
+
+      </div>
+</div>
+{% endblock %}

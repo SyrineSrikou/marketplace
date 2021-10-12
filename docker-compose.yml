@@ -1,0 +1,56 @@
+version: "3"
+   
+services:
+    # django web app
+    app:
+        build: .
+        container_name: tufleur
+        command: python3 manage.py runserver 0.0.0.0:8000
+        volumes:
+            - .:/tufleur
+        ports:
+            - "8000:8000"
+        depends_on:
+            - postgres_db
+        networks:
+            - postgres-compose-network
+    #database : postgresql
+    postgres_db:
+        image: postgres
+        ports:
+            - 5432:5432
+        container_name: postgresql_db
+        environment:
+          - POSTGRES_DB=postgres
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=postgres
+          - PGDATA:/var/lib/postgresql/data
+        volumes:
+          - ./pgdata:/var/lib/postgresql/data
+        networks:
+          - postgres-compose-network
+    #database viewer : pgadmin
+    pgadmin4:
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: "tufleur@gmail.com"
+            PGADMIN_DEFAULT_PASSWORD: "pgadmin2021"
+        ports:
+            - 8080:80
+        depends_on: 
+            - postgresql_db
+        volumes:
+            - ./pgadmin-data:/var/lib/pgadmin
+        networks:
+        - postgres-compose-network
+
+networks: 
+  postgres-compose-network:
+    driver: bridge
+
+volumes:
+  .:
+  pgdata:
+  pgadmin-data:
+
+

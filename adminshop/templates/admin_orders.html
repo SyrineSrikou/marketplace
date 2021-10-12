@@ -1,0 +1,133 @@
+{% extends 'admin-base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Container fluid -->
+          <div class="container-fluid p-4">
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-12">
+                <!-- Page Header -->
+                <div class="border-bottom pb-4 mb-4 d-lg-flex align-items-center justify-content-between">
+                  <div class="mb-2 mb-lg-0">
+                    <h1 class="mb-1 h2 font-weight-bold">Stores</h1>
+                    <!-- Breadcrumb -->
+                    <nav aria-label="breadcrumb">
+                      <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                          <a href="admin-dashboard.html">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                          <a href="#!">Stores</a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                          All
+                        </li>
+                      </ol>
+                    </nav>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-12">
+                <!-- Card -->
+                <div class="card rounded-lg">
+                  <!-- Card header -->
+                  <div class="card-header border-bottom-0 p-0 bg-white">
+                    <div>
+                      <!-- Nav -->
+                      <ul class="nav nav-lb-tab" id="tab" role="tablist">
+                        <li class="nav-item">
+                          <a class="nav-link active" id="orders-tab" data-toggle="pill" href="#orders" role="tab" aria-controls="orders" aria-selected="true">All</a>
+                        </li>
+
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="p-4 row">
+                    <!-- Form -->
+                    <form class="d-flex align-items-center col-12 col-md-12 col-lg-12">
+                       <span class="position-absolute pl-3 search-icon">
+                      <i class="fe fe-search"></i>
+                      </span>
+                      <input type="search" class="form-control pl-6" placeholder="Search Store" />
+                    </form>
+                  </div>
+                  <div>
+                    <!-- Table -->
+                    <div class="tab-content" id="tabContent">
+											<!--Tab pane -->
+                      <div class="tab-pane fade show active" id="stores" role="tabpanel" aria-labelledby="stores-tab">
+                        <div class="table-responsive border-0 overflow-y-hidden">
+                          <table class="table mb-0 text-nowrap">
+                            <thead>
+                              <tr>
+                                
+                                <th scope="col" class="border-0 text-uppercase">
+                                  Order
+                                </th>
+                                <th scope="col" class="border-0 text-uppercase">
+                                  Owner
+                                </th>
+                                <th scope="col" class="border-0 text-uppercase">
+                                  Date
+                                </th>
+                                <th scope="col" class="border-0 text-uppercase">
+                                  Status
+                                </th>
+                                <th scope="col" class="border-0 text-uppercase">
+                                  Store(s)
+                                </th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            {% for order in orders %}
+
+                                <tr>
+                                  <td class="align-middle border-top-0">
+                                    <div class="d-flex align-items-center">
+                                      <h5 class="mb-0">{{order.order_number}}</h5>
+                                    </div>
+                                  </td>
+                                  <td class="align-middle border-top-0">
+                                    <div class="d-flex align-items-center">
+                                      <h5 class="mb-0">{{order.user}}</h5>
+                                    </div>
+                                  </td>
+                                  <td class="align-middle border-top-0">{{order.created_at}}</td>
+                                  <td class="align-middle border-top-0">
+                                     {% if order.status == "Completed"  %}
+                                         <span class="badge-dot bg-success mr-1 d-inline-block align-middle"></span>{{order.status}}
+                                     {% elif order.status == "Accepted" %}
+                                        <span class="badge-dot bg-warning mr-1 d-inline-block align-middle"></span>{{order.status}}
+                                     {% elif order.status == "New" %}
+                                        <span class="badge-dot bg-info mr-1 d-inline-block align-middle"></span>{{order.status}}
+                                     {% else %}
+                                       <span class="badge-dot bg-danger mr-1 d-inline-block align-middle"></span>{{order.status}}
+                                     {% endif %}
+                                  </td>
+                                  <td class="align-middle border-top-0">
+                                    {% for item in order.items.all %}
+                                    
+                                     <li>{{ item.store }}</li>
+                                  
+                                   {% endfor %}
+                                  </td>
+                                </tr>
+                                
+
+                            {% endfor%}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content%}
+
+<!-- Page Title-->
+<div class="page-title-overlap bg-dark pt-4">
+    <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+      <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
+            <li class="breadcrumb-item"><a class="text-nowrap" href="index.html"><i class="ci-home"></i>Home</a></li>
+            <li class="breadcrumb-item text-nowrap"><a href="#">Account</a>
+            </li>
+            <li class="breadcrumb-item text-nowrap active" aria-current="page">Single ticket</li>
+          </ol>
+        </nav>
+      </div>
+      <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+        <h1 class="h3 text-light mb-0">Signle ticket</h1>
+      </div>
+    </div>
+  </div>
+  <div class="container pb-5 mb-2 mb-md-4">
+    <div class="row">
+      <!-- Sidebar-->
+      <aside class="col-lg-4 pt-4 pt-lg-0 pe-xl-5">
+        <div class="bg-white rounded-3 shadow-lg pt-1 mb-5 mb-lg-0">
+          <div class="d-md-flex justify-content-between align-items-center text-center text-md-start p-4">
+            <div class="d-md-flex align-items-center">
+              <div class="img-thumbnail rounded-circle position-relative flex-shrink-0 mx-auto mb-2 mx-md-0 mb-md-0" style="width: 6.375rem;"><img class="rounded-circle" src="{{request.user.userprofile.profile_picture.url}}" alt="user picture"></div>
+              <div class="ps-md-3">
+                <h3 class="fs-base mb-0">{{user.username}}</h3><span class="text-accent fs-sm">{{user.email}}</span>
+              </div>
+            </div><a class="btn btn-primary d-lg-none mb-2 mt-3 mt-md-0" href="#account-menu" data-bs-toggle="collapse" aria-expanded="false"><i class="ci-menu me-2"></i>Account menu</a>
+          </div>
+          <div class="d-lg-block collapse" id="account-menu">
+            <div class="bg-secondary px-4 py-3">
+              <h3 class="fs-sm mb-0 text-muted">Account settings</h3>
+            </div>
+            <ul class="list-unstyled mb-0">
+              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3 active" href="{% url 'dashboard:edit_profile' %}"><i class="ci-user opacity-60 me-2"></i>Profile info</a></li>
+              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="{% url 'dashboard:addresses' %}"><i class="ci-location opacity-60 me-2"></i>Addresses</a></li>
+              <li class="mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="#"><i class="ci-card opacity-60 me-2"></i>Payment methods</a></li>
+              <li class="d-lg-none border-top mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="{% url 'accounts:logout' %}"><i class="ci-sign-out opacity-60 me-2"></i>Sign out</a></li>
+            </ul>
+            <div class="bg-secondary px-4 py-3">
+              <h3 class="fs-sm mb-0 text-muted">Dashboard</h3>
+            </div>
+            <ul class="list-unstyled mb-0">
+              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="{% url 'dashboard:stores' %}"><i class="ci-bag opacity-60 me-2"></i>Stores<span class="fs-sm text-muted ms-auto">1</span></a></li>
+              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="{% url 'dashboard:orders' %}"><i class="ci-bag opacity-60 me-2"></i>Orders<span class="fs-sm text-muted ms-auto">1</span></a></li>
+              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="{% url 'dashboard:wishlist' %}"><i class="ci-heart opacity-60 me-2"></i>Wishlist<span class="fs-sm text-muted ms-auto">3</span></a></li>
+              <li class="border-bottom mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="{% url 'support:tickets' %}"><i class="ci-help opacity-60 me-2"></i>My tickets<span class="fs-sm text-muted ms-auto">1</span></a></li>
+              <li class="mb-0"><a class="nav-link-style d-flex align-items-center px-4 py-3" href="{% url 'store:create_store' %}"><i class="ci-help opacity-60 me-2"></i>become vendor </a></li>
+            </ul>
+          </div>
+        </div>
+      </aside>
+      <!-- Content  -->
+      <section class="col-lg-8">
+             <!-- Toolbar-->
+        <div class="d-none d-lg-flex justify-content-between align-items-center pt-lg-3 pb-4 pb-lg-5 mb-lg-4">
+          <div class="d-flex w-100 text-light text-center me-3">
+            <div class="fs-ms px-3">
+              <div class="fw-medium">Date Submitted</div>
+              <div class="opacity-60">{{ticket.create_date}}</div>
+            </div>
+            <div class="fs-ms px-3">
+              <div class="fw-medium">Last Updated</div>
+              <div class="opacity-60">{{ticket.updated_at}}</div>
+            </div>
+            <div class="fs-ms px-3">
+              <div class="fw-medium">Type</div>
+              <div class="opacity-60">{{ticket.ticket_type}}</div>
+            </div>
+            <div class="fs-ms px-3">
+              <div class="fw-medium">Priority</div><span class="badge bg-warning">{{ticket.priority}}</span>
+            </div>
+            <div class="fs-ms px-3">
+              <div class="fw-medium">Status</div><span class="badge bg-success">{{ticket.status}}</span>
+            </div>
+          </div><a class="btn btn-primary btn-sm" href="{% url 'accounts:logout' %}"><i class="ci-sign-out me-2"></i>Sign out</a>
+        </div>
+        <!-- Ticket details (visible on mobile)-->
+        <div class="d-flex d-lg-none flex-wrap bg-secondary text-center rounded-3 pt-4 px-4 pb-1 mb-4">
+          <div class="fs-sm px-3 pb-3">
+            <div class="fw-medium">Date Submitted</div>
+            <div class="text-muted">09/27/2019</div>
+          </div>
+          <div class="fs-sm px-3 pb-3">
+            <div class="fw-medium">Last Updated</div>
+            <div class="text-muted">09/30/2019</div>
+          </div>
+          <div class="fs-sm px-3 pb-3">
+            <div class="fw-medium">Type</div>
+            <div class="text-muted">Website problem</div>
+          </div>
+          <div class="fs-sm px-3 pb-3">
+            <div class="fw-medium">Priority</div><span class="badge bg-warning">High</span>
+          </div>
+          <div class="fs-sm px-3 pb-3">
+            <div class="fw-medium">Status</div><span class="badge bg-success">Open</span>
+          </div>
+        </div>
+        <!-- Comment-->
+        <div class="d-flex align-items-start pb-4 border-bottom"><img class="rounded-circle" src="{{request.user.userprofile.profile_picture.url}}" width="50" alt="profile_picture">
+          <div class="ps-3">
+            <h6 class="fs-md mb-2">{{ticket.created_by.first_name}} {{ticket.created_by.last_name}}</h6>
+            <p class="fs-md mb-1">{{ticket.content}}</p><span class="fs-ms text-muted"><i class="ci-time align-middle me-2"></i>{{ticket.create_date}}</span>
+          </div>
+        </div>
+
+               
+        {% for message in ticket.conversationmessages.all %}
+        
+   
+        <!-- Comment reply-->
+        <div class="d-flex align-items-start py-4 border-bottom"><img class="rounded-circle" src="{{message.created_by.userprofile.profile_picture.url}}" width="50" alt="profile_picture">
+          <div class="ps-3">
+            <h6 class="fs-md mb-2">{{ message.created_by.username }} - {{ message.createdat|timesince }} ago </h6>
+            <p class="fs-md mb-1">{{ message.content }} ------------- atus non. Urna et pharetra pharetra massa massa ultricies mi quis.</p><span class="fs-ms text-muted"><i class="ci-time align-middle me-2"></i>Sep 28, 2019 at 10:00AM</span>  
+          </div>
+        </div>
+        {% endfor %}
+
+        
+      <!-- Leave message-->
+      <h3 class="h5 mt-2 pt-4 pb-2">Leave a Message</h3>
+      <form method="post" action="{% url 'support:single_ticket' ticket.id %}">
+       {% csrf_token %}
+        <div class="mb-3">
+          <textarea class="form-control" rows="8" placeholder="Write your message here..." name="content" id="id_content" required></textarea>
+          <div class="invalid-tooltip">Please write the message!</div>
+        </div>
+        <div class="d-flex flex-wrap justify-content-between align-items-center">
+          <button class="btn btn-primary my-2" type="submit">Submit message</button>
+        </div>
+      </form>
+      </section>
+    </div>
+    
+  </div>
+
+  {% endblock %}

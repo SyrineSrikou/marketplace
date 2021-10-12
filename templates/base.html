@@ -1,0 +1,322 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Tufleur</title>
+    <!-- SEO Meta Tags-->
+    <meta name="description" content="E-commerce">
+    <meta name="keywords" content="shop, e-commerce, market, modern, business, handmade ">
+    <!-- Viewport-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Favicon and Touch Icons-->
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+    <link href="{% static 'img/favicon.ico' %}" rel="shortcut icon" type="image/x-icon">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="mask-icon" color="#fe6a6a" href="safari-pinned-tab.svg">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Vendor Styles including: Font Icons, Plugins, etc.-->
+    <link rel="stylesheet" media="screen" href="/static/vendor/simplebar/dist/simplebar.min.css"/>
+    <link rel="stylesheet" media="screen" href="/static/vendor/tiny-slider/dist/tiny-slider.css"/>
+    <link rel="stylesheet" media="screen" href="/static/vendor/drift-zoom/dist/drift-basic.min.css"/>
+    
+    <!-- Main Theme Styles + Bootstrap-->
+    <link rel="stylesheet" media="screen" href="/static/css/theme.min.css">
+    <link rel="stylesheet" media="screen" href="/static/css/custom.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+   
+
+  </head>
+  <!-- Body-->
+  <body class="handheld-toolbar-enabled">
+    
+    <!-- Navbar Marketplace-->
+    <!-- Remove "navbar-sticky" class to make navigation bar scrollable with the page.-->
+    <header class="shadow-sm">
+      <!-- Topbar-->
+      <div class="topbar topbar-dark bg-dark">
+        <div class="container">
+          <div class="topbar-text dropdown d-md-none"><a class="topbar-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Useful links</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" ><i class="ci-support text-muted me-2"></i>(+216) 51 000 000</a></li>
+              <li><a class="dropdown-item" href="order-tracking.html"><i class="ci-location text-muted me-2"></i>Order tracking</a></li>
+            </ul>
+          </div>
+          <div class="topbar-text text-nowrap d-none d-md-inline-block"><i class="ci-support"></i><span class="text-muted me-1">Support</span><a class="topbar-link">(+216) 51 000 000</a></div>
+          <div class="tns-carousel tns-controls-static d-none d-md-block">
+            <div class="tns-carousel-inner" data-carousel-options="{&quot;mode&quot;: &quot;gallery&quot;, &quot;nav&quot;: false}">
+              <div class="topbar-text">Free shipping for order over $200</div>
+              <div class="topbar-text">We return money within 30 days</div>
+              <div class="topbar-text">Friendly 24/7 customer support</div>
+            </div>
+          </div>
+
+          <div class="ms-3 text-nowrap"><a class="topbar-link me-4 d-none d-md-inline-block" href="order-tracking.html"><i class="ci-location"></i>Order tracking</a></div>
+        </div>
+      </div>
+
+      <!-- Remove "navbar-sticky" class to make navigation bar scrollable with the page.-->
+      <div class="navbar-sticky bg-light"></div>
+        <div class="navbar navbar-expand-lg navbar-light">
+          <div class="container"><a class="navbar-brand d-none d-sm-block flex-shrink-0" href="{% url 'discover:home' %}"><img src="/static/img/bg-darkLogo.png" width="200" alt="Tufleur"></a>
+             <!-- Search -->
+            <form action="/search/" method="post" class="input-group d-none d-lg-flex mx-4">
+              {% csrf_token %}
+
+            <div class="input-group d-none d-lg-flex mx-4">
+              <input class="form-control rounded-end pe-3" id="query" name="query" class="input search-input" type="text" placeholder="Enter your keyword" ><i class="ci-search position-absolute top-50 end-0 translate-middle-y text-muted fs-base me-3"></i>
+            </div>
+          </form>
+           
+            <!-- /Search -->
+
+           
+
+                
+            <div class="navbar-toolbar d-flex flex-shrink-0 align-items-center">
+
+                {% if user.is_authenticated %} 
+
+                {% if wishlist %}
+                <a class="navbar-tool d-none d-lg-flex active " href="#">
+                  <span class="navbar-tool-tooltip">Favorites</span>
+                <div class="navbar-tool-icon-box "><i class="navbar-tool-icon ci-heart"></i></div></a>
+                {% else %}
+               <a class="navbar-tool d-none d-lg-flex" href="{% url 'dashboard:wishlist' %}">
+                  <span class="navbar-tool-tooltip">Favorites</span>
+                <div class="navbar-tool-icon-box"><i class="navbar-tool-icon ci-heart"></i></div></a>
+              {% endif %}
+
+               <div class="navbar-tool dropdown ms-3"><a class="navbar-tool-icon-box dropdown-toggle" href="{% url 'notifications:notifications' %}">
+                  
+                  {% if notifications %}
+                  <span class="navbar-tool-label">{{ notifications|length}}</span> 
+                  {%endif%}
+                  <i class="navbar-tool-icon ci-bell"> </i></a>
+
+                  <!-- Cart dropdown-->
+                  <div class="dropdown-menu dropdown-menu-end">
+                    <div class="widget widget-cart px-3 pt-2 pb-3" style="width: 20rem;">
+                      <div style="height: 15rem;" data-simplebar data-simplebar-auto-hide="false">
+                      {% if not notifications %}
+                        <div class="widget-cart-item pb-2 border-bottom">
+                          <p>No new Notifications yet !</p>
+                        </div> 
+                      {% else %}
+                        {% for notification in notifications %}
+                        <div class="notification">
+                            <p>
+                                {% if notification.notification_type == 'store' %}
+                                    <a href="{% url 'notifications:notifications' %}?goto=dashboard:user_stores&notification={{ notification.id }}&extra_id={{ notification.extra_id }}">
+                                        <strong>From {{ notification.created_by.username }}</strong> : store opening request<br>
+                                        <small>{{ notification.created_at|timesince }} ago</small>
+                                    </a>
+                                {% elif notification.notification_type == 'order' %}
+                                    <a href="{% url 'notifications:notifications' %}?goto=dashboard:user_orders&notification={{ notification.id }}&extra_id={{ notification.extra_id }}">
+                                        <strong>From {{ notification.created_by.username }}</strong> : new order has been placed <br>
+                                        <small>{{ notification.created_at|timesince }} ago</small>
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'notifications:notifications' %}?goto=support:tickets&notification={{ notification.id }}&extra_id={{ notification.extra_id }}">
+                                        <strong>From Support {{ notification.created_by.username }}</strong> : Your ticket has been updated <br>
+                                        <small>{{ notification.created_at|timesince }} ago</small>
+                                    </a>
+                                {% endif %}
+                            </p>
+                        </div>
+                    {% endfor %}
+                      {%endif%}
+                      </div>
+                      </div>
+                  </div>
+                  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+
+
+                <div class="navbar-tool dropdown ms-2">
+                  <a class="navbar-tool-icon-box border dropdown-toggle" href="#"><img src="{{request.user.userprofile.profile_picture.url}}" width="32" alt="profile_picture"></a>
+                  <a class="navbar-tool-text ms-n1" href="#"><small>welcome</small> {{request.user.first_name}}</a>
+                  <div class="dropdown-menu dropdown-menu-end">
+                    <div style="min-width: 14rem;">
+                      <a class="dropdown-item d-flex align-items-center" href="{% url 'dashboard:stores' %}"><i class="ci-store opacity-60 me-2"></i> Manage Store</a>
+                      <h6 class="dropdown-header">Account</h6>
+                      <a class="dropdown-item d-flex align-items-center" href="{% url 'dashboard:edit_profile' %}"><i class="ci-settings opacity-60 me-2"></i>Profile</a>
+                      <a class="dropdown-item d-flex align-items-center" href="#"><i class="ci-basket opacity-60 me-2"></i>Orders</a>
+                      <a class="dropdown-item d-flex align-items-center" href="{% url 'accounts:logout' %}"><i class="ci-sign-out opacity-60 me-2"></i>Logout</a>
+                      <a class="dropdown-item d-flex align-items-center" href="{% url 'store:create_store' %}"><i class="ci-store opacity-60 me-2"></i> Become vendor</a>
+                    </div>
+                     
+                </div>
+           
+                {%else%}
+                <a class="btn btn-primary d-block w-30" href="{% url 'accounts:login'%}"> Login </a>
+                {%endif%}
+            </div>
+              <div class="navbar-tool dropdown ms-3"><a class="navbar-tool-icon-box bg-secondary dropdown-toggle" href="#"><span class="navbar-tool-label">{{ cart |length}}</span><i class="navbar-tool-icon ci-cart"></i></a><a class="navbar-tool-text" href="#"><small>My Cart</small>{{cart.total}} TND</a>
+
+                <!-- Cart dropdown-->
+                <div class="dropdown-menu dropdown-menu-end">
+                  <div class="widget widget-cart px-3 pt-2 pb-3" style="width: 20rem;">
+                    <div style="height: 15rem;" data-simplebar data-simplebar-auto-hide="false">
+                    {% if cart|length == 0 %}
+                      <div class="widget-cart-item pb-2 border-bottom">
+                        <p>your cart is empty</p>
+                      </div> 
+                    {% else %}
+                      {% for p in cart %}
+                      <div class="widget-cart-item pb-2 border-bottom">
+                        <button class="btn-close text-danger" type="button" aria-label="Remove"><span aria-hidden="true">&times;</span></button>
+                        <div class="d-flex align-items-center"><a class="flex-shrink-0" href="#"><img src="{{p.product.image.url}}" width="64" alt="Product"></a>
+                          <div class="ps-2">
+                            <h6 class="widget-product-title"><a href="">{{p.product.name}}</a></h6>
+                            <div class="widget-product-meta"> Quantity: {{p.quantity}} </div>
+                            <div class="widget-product-meta"></div>
+                          </div>
+                        </div>
+                      </div>
+                      {% endfor %}
+                      <div class="d-flex flex-wrap justify-content-between align-items-center py-3">
+                        <div class="fs-sm me-2 py-2"><span>Subtotal:</span>{{cart.get_total_cost}} TND</div><a class="btn btn-outline-secondary btn-sm" href="{% url 'cart:cart_detail' %}" >Expand cart<i class="ci-arrow-right ms-1 me-n1"></i></a>
+                      </div><a class="btn btn-primary btn-sm d-block w-100" href="#"><i class="ci-card me-2 fs-base align-middle"></i>Checkout</a>
+                   
+                    {%endif%}
+                    </div>
+                    </div>
+                </div>
+              </div>
+            </div>  
+          </div>
+        </div>
+        <div class="navbar navbar-expand-lg navbar-light navbar-stuck-menu mt-n2 pt-0 pb-2">
+          <div class="container">
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+              <!-- Search-->
+              <div class="input-group d-lg-none my-3"><i class="ci-search position-absolute top-50 start-0 translate-middle-y text-muted fs-base ms-3"></i>
+                <input class="form-control rounded-start" type="text" placeholder="Search for products">
+              </div>
+              <ul class="navbar-nav">
+                {% for c in categories %}
+                <li>
+                  <div class="nav-item"><a class="nav-link">{{c.category_name}}</a></div>
+                </li>
+                {%endfor%}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+    {% block content %}
+    {% endblock%}
+      
+      <!-- Footer-->
+      <footer class="bg-dark pt-5">
+        <div class="container pt-2 pb-3">
+          <div class="row">
+            <div class="col-md-6 text-center text-md-start mb-4">
+              <div class="text-nowrap mb-3"><a class="d-inline-block align-middle mt-n2 me-2" href="#"><img class="d-block" src="/static/img/v2logo.png" width="117" alt="Tufleur"></a><span class="d-inline-block align-middle h5 fw-light text-white mb-0">Marketplace</span></div>
+              <p class="fs-sm text-white opacity-70 pb-1">High quality items created by our global community.</p>
+              <h6 class="d-inline-block pe-3 me-3 border-end border-light"><span class="text-primary">65,478 </span><span class="fw-normal text-white">Products</span></h6>
+              <h6 class="d-inline-block pe-3 me-3 border-end border-light"><span class="text-primary">2,521 </span><span class="fw-normal text-white">Members</span></h6>
+              <h6 class="d-inline-block me-3"><span class="text-primary">897 </span><span class="fw-normal text-white">Vendors</span></h6>
+              <div class="widget mt-4 text-md-nowrap text-center text-md-start"><a class="btn-social bs-light bs-twitter me-2 mb-2" href="#"><i class="ci-twitter"></i></a><a class="btn-social bs-light bs-facebook me-2 mb-2" href="#"><i class="ci-facebook"></i></a><a class="btn-social bs-light bs-dribbble me-2 mb-2" href="#"><i class="ci-dribbble"></i></a><a class="btn-social bs-light bs-behance me-2 mb-2" href="#"><i class="ci-behance"></i></a><a class="btn-social bs-light bs-pinterest me-2 mb-2" href="#"><i class="ci-pinterest"></i></a></div>
+            </div>
+            <!-- Mobile dropdown menu (visible on screens below md)-->
+            <div class="col-12 d-md-none text-center mb-4 pb-2">
+              <div class="btn-group dropdown d-block mx-auto mb-3">
+                <button class="btn btn-outline-light border-light dropdown-toggle" type="button" data-bs-toggle="dropdown">Categories</button>
+                <ul class="dropdown-menu my-1">
+                  <li><a class="dropdown-item" href="#">Photos</a></li>
+                  <li><a class="dropdown-item" href="#">Graphics</a></li>
+                  <li><a class="dropdown-item" href="#">UI Design</a></li>
+                  <li><a class="dropdown-item" href="#">Web Themes</a></li>
+                  <li><a class="dropdown-item" href="#">Fonts</a></li>
+                  <li><a class="dropdown-item" href="#">Add-Ons</a></li>
+                </ul>
+              </div>
+              <div class="btn-group dropdown d-block mx-auto">
+                <button class="btn btn-outline-light border-light dropdown-toggle" type="button" data-bs-toggle="dropdown">For members</button>
+                <ul class="dropdown-menu my-1">
+                  <li><a class="dropdown-item" href="#">Licenses</a></li>
+                  <li><a class="dropdown-item" href="#">Return policy</a></li>
+                  <li><a class="dropdown-item" href="#">Payment methods</a></li>
+                  <li><a class="dropdown-item" href="#">Become a vendor</a></li>
+                  <li><a class="dropdown-item" href="#">Become an affiliate</a></li>
+                  <li><a class="dropdown-item" href="#">Marketplace benefits</a></li>
+                </ul>
+              </div>
+            </div>
+            <!-- Desktop menu (visible on screens above md)-->
+            <div class="col-md-3 d-none d-md-block text-center text-md-start mb-4">
+              <div class="widget widget-links widget-light pb-2">
+                <h3 class="widget-title text-light">Categories</h3>
+                <ul class="widget-list">
+                  {% for cat in categories %}
+                  <li class="widget-list-item"><a class="widget-list-link" href="#">{{cat}}</a></li>
+                 {%endfor%}
+                </ul>
+              </div>
+            </div>
+            <div class="col-md-3 d-none d-md-block text-center text-md-start mb-4">
+              <div class="widget widget-links widget-light pb-2">
+                <h3 class="widget-title text-light">For members</h3>
+                <ul class="widget-list">
+                  <li class="widget-list-item"><a class="widget-list-link" href="#">Licenses</a></li>
+                  <li class="widget-list-item"><a class="widget-list-link" href="#">Return policy</a></li>
+                  <li class="widget-list-item"><a class="widget-list-link" href="#">Payment methods</a></li>
+                  <li class="widget-list-item"><a class="widget-list-link" href="#">Become a vendor</a></li>
+                  <li class="widget-list-item"><a class="widget-list-link" href="#">Marketplace benefits</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Second row-->
+        <div class="pt-5 bg-darker">
+          <div class="container">
+            <div class="d-md-flex justify-content-between pt-4">
+              <div class="pb-4 fs-xs text-light opacity-50 text-center text-md-start">© All rights reserved. 2021</div>
+              <div class="widget widget-links widget-light pb-4">
+                <ul class="widget-list d-flex flex-wrap justify-content-center justify-content-md-start">
+                  <li class="widget-list-item ms-4"><a class="widget-list-link fs-ms" href="#">Help Center</a></li>
+                  <li class="widget-list-item ms-4"><a class="widget-list-link fs-ms" href="#">Affiliates</a></li>
+                  <li class="widget-list-item ms-4"><a class="widget-list-link fs-ms" href="#">Support</a></li>
+                  <li class="widget-list-item ms-4"><a class="widget-list-link fs-ms" href="#">Terms &amp; Conditions</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <!-- Toolbar for handheld devices (Marketplace)-->
+      <div class="handheld-toolbar">
+        <div class="d-table table-layout-fixed w-100"><a class="d-table-cell handheld-toolbar-item" href="dashboard-favorites.html"><span class="handheld-toolbar-icon"><i class="ci-heart"></i></span><span class="handheld-toolbar-label">Favorites</span></a><a class="d-table-cell handheld-toolbar-item" href="javascript:void(0)" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" onclick="window.scrollTo(0, 0)"><span class="handheld-toolbar-icon"><i class="ci-menu"></i></span><span class="handheld-toolbar-label">Menu</span></a><a class="d-table-cell handheld-toolbar-item" href="marketplace-cart.html"><span class="handheld-toolbar-icon"><i class="ci-cart"></i><span class="badge bg-primary rounded-pill ms-1">3</span></span><span class="handheld-toolbar-label">$56.00</span></a></div>
+      </div>
+      <!-- Back To Top Button--><a class="btn-scroll-top" href="#top" data-scroll><span class="btn-scroll-top-tooltip text-muted fs-sm me-2">Top</span><i class="btn-scroll-top-icon ci-arrow-up">   </i></a>
+      <script src="/static/js/theme.min.js"></script>
+      <script src="/static/js/script.js"></script>
+
+      <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="/static/vendor/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+      <script src="/static/vendor/simplebar/dist/simplebar.min.js"></script>
+      <script src="/static/vendor/tiny-slider/dist/min/tiny-slider.js"></script>
+      <script src="/static/vendor/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
+      <script src="/static/vendor/drift-zoom/dist/Drift.min.js"></script>
+      

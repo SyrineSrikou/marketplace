@@ -1,0 +1,301 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<!-- Page Title-->
+<div class="page-title-overlap bg-dark pt-4">
+  <div class="container d-lg-flex justify-content-between py-2 py-lg-3">
+    <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
+          <li class="breadcrumb-item"><a class="text-nowrap" href="index.html"><i class="ci-home"></i>Home</a></li>
+          <li class="breadcrumb-item text-nowrap"><a href="#">Store</a>
+          </li>
+          <li class="breadcrumb-item text-nowrap active" aria-current="page">Product details</li>
+        </ol>
+      </nav>
+    </div>
+    <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+      <h1 class="h3 text-light mb-0">{{product.name}}</h1>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <!-- Gallery + details-->
+  <div class="bg-light shadow-lg rounded-3 px-4 py-3 mb-5">
+    <div class="px-lg-3">
+      <div class="row">
+        <!-- Product gallery-->
+        <div class="col-lg-7 pe-lg-0 pt-lg-4">
+          <div class="product-gallery mainImage">
+            <div class="product-gallery-preview order-sm-2 mainImage">
+              <article class="gallery-wrap">
+                <div class="img-big-wrap mainImage">
+                  <center><img src="{{ product.image.url }}"></center>
+                </div> <!-- img-big-wrap.// -->
+    
+              </article> 
+            </div>
+          </div>
+
+          <ul class="thumb">
+						<li>
+							<a href="{{ product.image.url }}" target="mainImage"><img src="{{ product.image.url }}" alt="Product Image"></a>
+
+							{% for pi in product_gallery %}
+							<a href="{{pi.image.url}}" target="mainImage"><img src="{{pi.image.url}}" alt="Product Image"></a>
+							{% endfor %}
+						</li>
+					</ul>
+          <!-- <div class="row">
+              {% for pi in product.productimage_set.all %}
+              <div class="col-md-4 p-3">
+                  <a class="product-gallery-thumblist-item active" href="{{pi.image.url}}" target="_blank">
+                      <img src="{{pi.image.url}}" class="img-fluid" style="height: 100px; object-fit: contain;" alt="">
+                  </a>
+              </div>
+              {% endfor %}
+          </div> -->
+
+        </div>
+        <!-- Product details-->
+        <div class="col-lg-5 pt-4 pt-lg-0">
+          <div class="product-details ms-auto pb-3">
+            <div class="d-flex justify-content-between align-items-center mb-2"><a href="#reviews" data-scroll>
+              
+                <div class="star-rating">
+                  <span>
+                    <i class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+                    <i class="fa fa-star{% if product.averageReview < 1.5 %}-o{% elif product.averageReview >= 1.5 and product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+                    <i class="fa fa-star{% if product.averageReview < 2.5 %}-o{% elif product.averageReview >= 2.5 and product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+                    <i class="fa fa-star{% if product.averageReview < 3.5 %}-o{% elif product.averageReview >= 3.5 and product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+                    <i class="fa fa-star{% if product.averageReview < 4.5 %}-o{% elif product.averageReview >= 4.5 and product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+                   </span>                
+                  
+                </div><span class="d-inline-block fs-sm text-body align-middle mt-1 ms-1">{{product.countReview}} Reviews</span></a>
+                <a href="{% url 'dashboard:user_wishlist' product.id  %}"><button class="btn-wishlist me-0 me-lg-n3" type="button" data-bs-toggle="tooltip" title="Add to wishlist"><i class="ci-heart"></i></button>
+                </a>
+
+            </div>
+
+          
+            <div class="mb-3"><span class="h3 fw-normal text-accent me-1">{{product.price}} TND</span>
+<!--               <del class="text-muted fs-lg me-3">$25.<small>00</small></del><span class="badge bg-danger badge-shadow align-middle mt-n2">Sale</span>
+ -->            </div>
+            <div class="mb-3"><span class="h6 fw-normal text-accent me-1"> Store : {{product.store}} </span></div>
+            <div class="mb-3"><span class="h6 fw-normal text-accent me-1"> Added by {{product.added_by.first_name}} {{product.added_by.last_name}}</span></div>
+            <div class="fs-sm mb-4"><span class="text-heading fw-medium me-1">Color:</span><span class="text-muted" id="colorOption">Pink/Dark blue/Gold</span></div>
+            <div style="display:flex">
+              {% for tag in product.tags.all %}
+                <a href="#">#{{ tag }}  &nbsp;</a>
+              {% endfor %}
+          </div>
+            <div class="position-relative me-n4 mb-3">
+              <div class="form-check form-option form-check-inline mb-2">
+            </div>
+            {% if product.stock > 0 %}
+                  <div class="product-badge product-available mt-n1"><i class="ci-security-check"></i>Product Available</div>
+                    <br><br>   
+              {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success">{{ message }}</div>
+                {% endfor %}
+              {% endif %}
+              <br>
+              <br>
+              <div>
+              <form method="post" action="{% url 'discover:product_detail' product.category.slug product.slug %}">
+                  {% csrf_token %}
+                  {% if product.in_cart %}
+                      <p>already in cart </p>
+                  {% else %} 
+                  <div class="mb-3 d-flex align-items-center">
+                    <div>
+                      <input  class="form-control me-3" style="width: 5rem;" type="number" name="quantity" value="1"  min="1" max={{product.stock}}>
+
+                    </div>
+                    <button class="btn btn-primary btn-shadow d-block w-100" type="submit"><i class="ci-cart fs-lg me-2"></i>Add to Cart</button>
+                  </div>
+                  {% endif %}
+              </form>
+              </div>
+            {% else %}
+              <div class="product-badge product-not-available text-danger mt-n1">Product Out Of Stock</div>
+            </div>
+            {% endif %}
+            </div>
+            <!-- Product panels-->
+            <div class="accordion mb-4" id="productPanels">
+              <div class="accordion-item">
+                <h3 class="accordion-header"><a class="accordion-button" href="#productInfo" role="button" data-bs-toggle="collapse" aria-expanded="true" aria-controls="productInfo"><i class="ci-announcement text-muted fs-lg align-middle mt-n1 me-2"></i>Product info</a></h3>
+                <div class="accordion-collapse collapse show" id="productInfo" data-bs-parent="#productPanels">
+                  <div class="accordion-body">
+                    <h6 class="fs-sm mb-2">Composition</h6>
+                    {{product.description}}
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            <!-- Sharing-->
+            <label class="form-label d-inline-block align-middle my-2 me-3">Share:</label><a class="btn-share btn-twitter me-2 my-2" href="#"><i class="ci-twitter"></i>Twitter</a><a class="btn-share btn-instagram me-2 my-2" href="#"><i class="ci-instagram"></i>Instagram</a><a class="btn-share btn-facebook my-2" href="#"><i class="ci-facebook"></i>Facebook</a>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>  
+ <!-- Reviews-->
+ <div class="border-top border-bottom my-lg-3 py-5">
+  <div class="container pt-md-2" id="reviews">
+    <div class="row pb-3">
+      <div class="col-lg-4 col-md-5">
+        <h2 class="h3 mb-4">{{product.countReview}} Reviews</h2>
+        <div class="star-rating me-2"><span>
+          <i class="fa fa-star{% if product.averageReview < 0.5 %}-o{% elif product.averageReview >= 0.5 and product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+          <i class="fa fa-star{% if product.averageReview < 1.5 %}-o{% elif product.averageReview >= 1.5 and product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+          <i class="fa fa-star{% if product.averageReview < 2.5 %}-o{% elif product.averageReview >= 2.5 and product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+          <i class="fa fa-star{% if product.averageReview < 3.5 %}-o{% elif product.averageReview >= 3.5 and product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+          <i class="fa fa-star{% if product.averageReview < 4.5 %}-o{% elif product.averageReview >= 4.5 and product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+         </span>   
+        </div><span class="d-inline-block align-middle">{{product.averageReview}} Overall rating</span>
+        
+      </div>
+      <div class="col-lg-8 col-md-7">
+        <div class="d-flex align-items-center mb-2">
+          <div class="text-nowrap me-3"><span class="d-inline-block align-middle text-muted">5</span><i class="ci-star-filled fs-xs ms-1"></i></div>
+          <div class="w-100">
+            <div class="progress" style="height: 4px;">
+              <div class="progress-bar bg-success" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div><span class="text-muted ms-3">43</span>
+        </div>
+        <div class="d-flex align-items-center mb-2">
+          <div class="text-nowrap me-3"><span class="d-inline-block align-middle text-muted">4</span><i class="ci-star-filled fs-xs ms-1"></i></div>
+          <div class="w-100">
+            <div class="progress" style="height: 4px;">
+              <div class="progress-bar" role="progressbar" style="width: 27%; background-color: #a7e453;" aria-valuenow="27" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div><span class="text-muted ms-3">16</span>
+        </div>
+        <div class="d-flex align-items-center mb-2">
+          <div class="text-nowrap me-3"><span class="d-inline-block align-middle text-muted">3</span><i class="ci-star-filled fs-xs ms-1"></i></div>
+          <div class="w-100">
+            <div class="progress" style="height: 4px;">
+              <div class="progress-bar" role="progressbar" style="width: 17%; background-color: #ffda75;" aria-valuenow="17" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div><span class="text-muted ms-3">9</span>
+        </div>
+        <div class="d-flex align-items-center mb-2">
+          <div class="text-nowrap me-3"><span class="d-inline-block align-middle text-muted">2</span><i class="ci-star-filled fs-xs ms-1"></i></div>
+          <div class="w-100">
+            <div class="progress" style="height: 4px;">
+              <div class="progress-bar" role="progressbar" style="width: 9%; background-color: #fea569;" aria-valuenow="9" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div><span class="text-muted ms-3">4</span>
+        </div>
+        <div class="d-flex align-items-center">
+          <div class="text-nowrap me-3"><span class="d-inline-block align-middle text-muted">1</span><i class="ci-star-filled fs-xs ms-1"></i></div>
+          <div class="w-100">
+            <div class="progress" style="height: 4px;">
+              <div class="progress-bar bg-danger" role="progressbar" style="width: 4%;" aria-valuenow="4" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div><span class="text-muted ms-3">2</span>
+        </div>
+      </div>
+    </div>
+    <hr class="mt-4 mb-3">
+    <div class="row pt-4">
+      <!-- Reviews list-->
+      <div class="col-md-7">
+        <!-- Review-->
+        {% for review in reviews %}
+        <div class="product-review pb-4 mb-4 border-bottom">
+          <div class="d-flex mb-3">
+           
+            <div class="d-flex align-items-center me-4 pe-2">
+              <img class="rounded-circle" src="{{review.user.userprofile.profile_picture.url}}" width="50" alt="{{review.user.username}}">
+              <div class="ps-3">
+                <h6 class="fs-sm mb-0">{{review.user.username}}</h6><span class="fs-ms text-muted">{{review.updated_at}}</span>
+              </div>
+            </div>
+            
+          </div>
+          <div class="rating-star">
+            <span>
+              <i class="fa fa-star{% if review.rating == 0.5 %}-half-o{% elif review.rating < 1 %}-o {% endif %}" aria-hidden="true"></i>
+              <i class="fa fa-star{% if review.rating == 1.5 %}-half-o{% elif review.rating < 2 %}-o {% endif %}" aria-hidden="true"></i>
+              <i class="fa fa-star{% if review.rating == 2.5 %}-half-o{% elif review.rating < 3 %}-o {% endif %}" aria-hidden="true"></i>
+              <i class="fa fa-star{% if review.rating == 3.5 %}-half-o{% elif review.rating < 4 %}-o {% endif %}" aria-hidden="true"></i>
+              <i class="fa fa-star{% if review.rating == 4.5 %}-half-o{% elif review.rating < 5 %}-o {% endif %}" aria-hidden="true"></i>
+            </span>
+          </div>
+          <span class="fw-medium">Subject:&nbsp;</span>{{review.subject}}
+          <p class="fs-md mb-2">{{review.review}}</p>       
+         
+          
+        </div>
+        {%endfor%}
+        </div>
+      <!-- Leave review form-->
+      <div class="col-md-5 mt-2 pt-4 mt-md-0 pt-md-0">
+        <div class="bg-secondary py-grid-gutter px-grid-gutter rounded-3">
+          <h3 class="h4 pb-2">Write a review</h3>
+          <form class="needs-validation" method="post"  action="{% url 'store:submit_review' product.category.slug product.slug %}" novalidate>
+            {% csrf_token %}
+            <div class="mb-3">
+              <label class="form-label" for="review-name">Review Title<span class="text-danger">*</span></label>
+              <input class="form-control" type="text" name="subject" required id="review-title">
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="review-text">Review<span class="text-danger">*</span></label>
+              <textarea class="form-control" rows="6" name="review" required id="review-text"></textarea>
+              <div class="invalid-feedback">Please write a review!</div><small class="form-text text-muted">Your review must be at least 50 characters.</small>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="review-rating">How do you rate this product?<span class="text-danger">*</span></label>
+            </div>
+              <div class="rate">
+                <input type="radio" name="rating" id="rating10" value="5" required /><label for="rating10" title="5"></label>
+                <input type="radio" name="rating" id="rating9" value="4.5" required /><label for="rating9" title="4.5" class="half"></label>
+                <input type="radio" name="rating" id="rating8" value="4" required /><label for="rating8" title="4"></label>
+                <input type="radio" name="rating" id="rating7" value="3.5" required /><label for="rating7" title="3.5" class="half"></label>
+                <input type="radio" name="rating" id="rating6" value="3" required /><label for="rating6" title="3"></label>
+                <input type="radio" name="rating" id="rating5" value="2.5" required /><label for="rating5" title="2.5" class="half"></label>
+                <input type="radio" name="rating" id="rating4" value="2" required /><label for="rating4" title="2"></label>
+                <input type="radio" name="rating" id="rating3" value="1.5" required /><label for="rating3" title="1.5" class="half"></label>
+                <input type="radio" name="rating" id="rating2" value="1" required /><label for="rating2" title="1"></label>
+                <input type="radio" name="rating" id="rating1" value="0.5" required /><label for="rating1" title="0.5" class="half"></label>
+              </div>
+            <div class="invalid-feedback">Please choose rating!</div>
+            
+            {% if user.is_authenticated %}
+              {% if orderitem %}
+                <button class="btn btn-primary btn-shadow d-block w-100" type="submit">Submit a Review</button>
+							{% else %}
+								<p>You must purchase this product to post a review.</p>
+							{% endif %}
+						{% else %}
+						<p>You must be logged in to post a review. <span><a href="{% url 'accounts:login' %}">Login now</a></span></p>
+						{% endif %}
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+  
+{% endblock %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+  $(document).ready(function(){
+    $('.thumb a').click(function(e){
+      e.preventDefault();
+      $('.mainImage img').attr('src', $(this).attr("href"));
+
+    })
+  })
+</script>

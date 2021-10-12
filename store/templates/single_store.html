@@ -1,0 +1,84 @@
+ 
+{% extends 'base.html' %}
+
+{% block title %}store {% endblock %}
+
+{% block content %} 
+ <!-- Header-->
+ <div class="page-title-overlap bg-accent pt-4">
+    <div class="container d-flex flex-wrap flex-sm-nowrap justify-content-center justify-content-sm-between align-items-center pt-2">
+      <div class="d-flex align-items-center pb-3">
+        <div class="img-thumbnail rounded-circle flex-shrink-0" style="width: 6.375rem;"><img class="rounded-circle" src="{{single_store.logo.url}}" alt="Store Logo"></div>
+        <div class="ps-3">
+          <h3 class="text-light fs-lg mb-0">{{single_store.name}}</h3><span class="d-block text-light fs-ms opacity-60 py-1">Open since {{single_store.create_date}}</span><span class="badge bg-success"><i class="ci-check me-1"></i>Available store</span>
+        </div>
+      </div>
+      <div class="d-flex">
+        <div class="text-sm-end me-5">
+          <div class="text-light fs-base">Total sales</div>
+          <h3 class="text-light">426</h3>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  <div class="container mb-5 pb-3">
+    <div class="bg-light shadow-lg rounded-3 overflow-hidden">
+      <div class="row">
+        <!-- Sidebar-->
+        <aside class="col-lg-4 pe-xl-5">
+          <div class="bg-white h-100 border-end p-4">
+            <div class="p-2">
+              <h6>About</h6>
+              <p class="fs-ms text-muted">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium viras doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+              <hr class="my-4">
+              <h6>Contacts</h6>
+              <ul class="list-unstyled fs-sm">
+                <li><a class="nav-link-style d-flex align-items-center" href="mailto:contact@example.com"><i class="ci-mail opacity-60 me-2"></i>contact@example.com</a></li>
+                <li><a class="nav-link-style d-flex align-items-center" href="#"><i class="ci-globe opacity-60 me-2"></i>www.createx.studio</a></li>
+              </ul><a class="btn-social bs-facebook bs-outline bs-sm me-2 mb-2" href="#"><i class="ci-facebook"></i></a><a class="btn-social bs-twitter bs-outline bs-sm me-2 mb-2" href="#"><i class="ci-twitter"></i></a><a class="btn-social bs-dribbble bs-outline bs-sm me-2 mb-2" href="#"><i class="ci-dribbble"></i></a><a class="btn-social bs-behance bs-outline bs-sm me-2 mb-2" href="#"><i class="ci-behance"></i></a>
+              <hr class="my-4">
+              <h6 class="pb-1">Send message</h6>
+              <form class="needs-validation pb-2" method="post" novalidate>
+                <div class="mb-3">
+                  <textarea class="form-control" rows="6" placeholder="Your message" required></textarea>
+                  <div class="invalid-feedback">Please wirte your message!</div>
+                </div>
+                <button class="btn btn-primary btn-sm d-block w-100" type="submit">Send</button>
+              </form>
+            </div>
+          </div>
+        </aside>
+        <!-- Content-->
+        <section class="col-lg-8 pt-lg-4 pb-md-4">
+          <div class="pt-2 px-4 ps-lg-0 pe-xl-5">
+            <h2 class="h3 pt-2 pb-4 mb-4 text-center text-sm-start border-bottom">Products<span class="badge bg-faded-accent fs-sm text-body align-middle ms-2">{{sproducts.count}}</span></h2>
+            <div class="row pt-2">
+              <!-- Product-->
+              {% for p in sproducts %}
+                <div class="d-sm-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+                    <div class="d-block d-sm-flex align-items-center text-center text-sm-start"><a class="d-inline-block flex-shrink-0 mx-auto me-sm-4" ><img src="{{p.image.url}}" width="120" alt="product image"></a>
+                      <div class="pt-2">
+                        <h3 class="product-title fs-base mb-2"><a href="#">{{p.name|title}}</a></h3>
+                        <div class="fs-sm"><span class="text-muted me-2">Category : </span>{{p.category|title}}</div>
+                        <div class="fs-sm"><span class="text-muted me-2">Price : </span>{{p.price}} TND </div>
+                        <div class="fs-sm"><span class="text-muted me-2">{{p.return_policy}} policy </span></div>
+
+                       
+                      </div>
+                    </div>
+                    
+                  </div>
+              </div>
+              {%endfor%}
+             
+              
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock %}

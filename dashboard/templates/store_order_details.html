@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block content%}
+
+ <!-- Dashboard header-->
+ <div class="page-title-overlap bg-accent pt-4">
+    <div class="container d-flex flex-wrap flex-sm-nowrap justify-content-center justify-content-sm-between align-items-center pt-2">
+      <div class="d-flex align-items-center pb-3">
+        <div class="img-thumbnail rounded-circle position-relative flex-shrink-0" ><img class="rounded-circle " src="{{store.logo.url}}" width="150" alt="store logo"></div>
+        <div class="ps-3">
+          <h3 class="text-light fs-lg mb-0">{{store.name}}</h3><span class="d-block text-light fs-ms opacity-60 py-1">Opened since {{store.create_date}}</span>
+        </div>
+      </div>
+      <div class="d-flex">
+        <div class="text-sm-end me-5">
+          <div class="text-light fs-base">Total sales</div>
+          <h3 class="text-light">426</h3>
+        </div>
+        <div class="text-sm-end">
+          <div class="text-light fs-base">Store rating</div>
+          <div class="star-rating"><i class="star-rating-icon ci-star-filled active"></i><i class="star-rating-icon ci-star-filled active"></i><i class="star-rating-icon ci-star-filled active"></i><i class="star-rating-icon ci-star-filled active"></i><i class="star-rating-icon ci-star"></i>
+          </div>
+          <div class="text-light opacity-60 fs-xs">Based on 98 reviews</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container mb-5 pb-3">
+    <div class="bg-light shadow-lg rounded-3 overflow-hidden">
+      <div >
+    
+      <!-- Content  -->
+                <section >
+                 <!-- Order Details Modal-->
+                <div id="order-details">
+                    <div >
+                    <div >
+                        <div class="modal-header">
+                        <h5 class="modal-title">Order No - {{order.order_number}}</h5>
+                        
+                        </div>
+                        <div class="modal-footer flex-wrap justify-content-end bg-secondary fs-md">
+                            {% if order.status == 'New' %}
+                                <div ><a href="{% url 'dashboard:accept_order'  store.slug order.id %}"> <span class="btn btn-primary btn-sm me-3"><i class="ci-check me-1"></i>Accept order</span></a></div>
+                            {% elif order.status == 'Accepted' %}
+                                <div ><a href="{% url 'dashboard:order_completed'  store.slug order.id %}"> <span class="btn btn-success btn-sm me-3"><i class="ci-check me-1"></i>Compeleted order</span></a></div>
+                                <div ><a href="{% url 'dashboard:order_canceled'  store.slug order.id %}"> <span class="btn btn-danger btn-sm me-3"><i class="ci-check me-1"></i>Canceled order</span></a></div>
+                            {% elif order.status == 'Completed' %}
+                                <div ><span class="btn btn-primary btn-sm me-3"><i class="ci-check me-1"></i>Compeleted order</span></div>
+                            {% else %}
+                                <div ><span class="btn btn-primary btn-sm me-3"><i class="ci-check me-1"></i>Canceled order</span></div>
+                            {%endif%}
+
+                        </div>
+                        <div class="modal-footer flex-wrap justify-content-between bg-secondary fs-md">
+                            <div class="px-2 py-1"><span class="text-muted">Order created at : {{order.created_at}}</div>
+                            {% if order.status == 'Completed'  %}
+                              <div class="px-2 py-1"><span class="text-muted">Amount: {{order.store_paid_amount}}</div>
+                            {% else %}
+                              <div class="px-2 py-1"><span class="text-muted">Amount to pay : {{order.store_amount}}</div>
+                            {%endif%}
+                            <div class="px-2 py-1"><span class="text-muted">shipping :&nbsp; 10.000 TND</div>
+                            {% if order.status == 'Completed'  %}
+                              <div class="px-2 py-1"><span class="text-muted">Store Paid : Yes</div>
+                            {% else  %}
+                              <div class="px-2 py-1"><span class="text-muted">Store Paid : No</div>
+                            {%endif%}
+                        </div>
+                        <div class="modal-header">
+                            <h5 class="modal-title">Customer Informations</h5>
+                            
+                            </div>
+                            <div class="modal-footer flex-wrap justify-content-between bg-secondary fs-md">
+                                <div class="column is-12">
+                                    <b>Name:</b> {{ order.user.first_name }} {{ order.user.last_name }}<br>
+                                    <b>Address:</b> {{ order.address.address_line1 }}<br>
+                                    <b>Zip and place:</b> {{ order.address.zipcode }} {{ order.address.city }}<br>
+                                    <b>E-mail:</b> {{ order.user.email }}<br>
+                                    <b>Phone:</b> {{ order.user.phone_number }}
+                                </div>
+                            </div>
+                        <div class="modal-header">
+                            <h5 class="modal-title">Ordered Items</h5>
+                            
+                            </div>
+                        <div class=" bg-secondary modal-body pb-0">
+                            <!-- Item-->
+                            {% for item in order.items.all %}
+                                {% if item.store == store %}
+                                    <div class=" d-sm-flex justify-content-between mb-4 pb-3 pb-sm-2 border-bottom">
+                                        <div class="d-sm-flex text-center text-sm-start"><a class="d-inline-block flex-shrink-0 mx-auto" href="#" style="width: 8rem;"><img src="{{item.product.image.url}}" alt="Product"></a>
+                                        <div class="ps-sm-4 pt-2">
+                                            <h3 class="product-title fs-base mb-2"><a href="#">{{ item.product.name }}</a></h3>
+                                            <div class="fs-sm"><span class="text-muted me-2">Size:</span>8.5</div>
+                                            <div class="fs-sm"><span class="text-muted me-2">Color:</span>White &amp; Blue</div>
+                                            <div class="fs-lg text-accent pt-2">{{ item.product.price }} TND </div>
+                                        </div>
+                                        </div>
+                                        <div class="pt-2 ps-sm-3 mx-auto mx-sm-0 text-center">
+                                        <div class="text-muted mb-2">Quantity:</div>{{ item.quantity }}
+                                        </div>
+                                        <div class="pt-2 ps-sm-3 mx-auto mx-sm-0 text-center">
+                                        <div class="text-muted mb-2">Subtotal</div>{{ item.get_total_price }} TND</small>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                      
+                    </div>
+                    </div>
+                </div>
+            </section>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

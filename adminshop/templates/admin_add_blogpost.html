@@ -1,0 +1,25 @@
+{% extends 'admin-base.html' %}
+
+{% load static %}
+{% block content%}
+
+ <div class="page-title-overlap bg-accent pt-4">
+  <div class="container mb-5 pb-3">
+        <section  class="col-lg-8 pt-lg-4 pb-4 mb-3">
+            <div lass="pt-2 px-4 ps-lg-0 pe-xl-5">
+
+                <div class="container">
+                    <form action="" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{form.as_p}}
+                        <button class="btn btn-info">Submit </button>
+                    </form>  
+                </div>
+                
+            </div>
+        </section>
+      
+  </div>
+
+{% endblock %}
+

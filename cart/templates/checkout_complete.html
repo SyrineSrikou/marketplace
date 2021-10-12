@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container pb-5 mb-sm-4">
+    <div class="pt-5">
+      <div class="card py-3 mt-sm-3">
+        <div class="card-body text-center">
+          <h2 class="h4 pb-3">Thank you for your order!</h2>
+          <p class="fs-sm mb-2">Your order has been placed and will be processed as soon as possible.</p>
+          <p class="fs-sm mb-2">Make sure you make note of your order number, which is <span class='fw-medium'>{{order.order_number}}</span></p>
+          
+        <div class="container" style="margin: 0 auto;width: 50%;padding: 50px;background: #fff6f6;margin-top: 50px;margin-bottom: 50px;">
+          <div class="row invoice row-printable">
+              <div class="col-md-12">
+                  <!-- col-lg-12 start here -->
+                  <div class="panel panel-default plain" id="dash_0">
+                      <!-- Start .panel -->
+                      <div class="panel-body p30">
+                          <div class="row">
+                              <!-- Start .row -->
+                              <div class="col-lg-6">
+                                  <!-- col-lg-6 start here -->
+                                  <div class="invoice-logo"><img src="/static/img/bg-darkLogo.png" alt="Invoice logo" style="max-height: 40px;"></div>
+                              </div>
+                              <!-- col-lg-6 end here -->
+                              <div class="col-lg-6">
+                                  <!-- col-lg-6 start here -->
+                                  <div class="invoice-from">
+                                      <ul class="list-unstyled text-right">
+                                          <li><strong>Invoiced To</strong></li>
+                                          <li>{{order.user.first_name}} {{order.user.last_name}}</li>
+                                          <li>{{order.address.address_line1}}</li>
+                                          <li>{{order.address.city}}, {{order.address.country}} {{order.address.zipcode}}</li>
+                                          
+                                      </ul>
+                                  </div>
+                              </div>
+                              <!-- col-lg-6 end here -->
+                              <div class="col-lg-12">
+                                  <!-- col-lg-12 start here -->
+                                  <div class="invoice-details mt25">
+                                      <div class="well">
+                                          <ul class="list-unstyled mb0">
+                                              <li><strong>Order</strong> #{{order.order_number}}</li>
+                                              <li><strong>Order Date:</strong> {{order.created_at}}</li>
+                                              <li><strong>Order paid:</strong> No </li>
+                                          </ul>
+                                      </div>
+                                  </div>
+
+                                  <div class="invoice-items">
+                                      <div class="table-responsive" style="overflow: hidden; outline: none;" tabindex="0">
+                                          <table class="table table-bordered">
+                                              <thead>
+                                                  <tr>
+                                                      <th class="per70 text-center">Products</th>
+                                                      <th class="per5 text-center">Qty</th>
+                                                      <th class="per25 text-center">Total</th>
+                                                  </tr>
+                                              </thead>
+                                              <tbody>
+                                                {% for item in order.items.all %}
+                                                  <tr>
+                                                      <td>{{item.product.name}}</td>
+                                                      <td class="text-center">{{item.quantity}}</td>
+                                                      <td class="text-center">{{item.product.price}} TND</td>
+                                                  </tr>
+                                                {% endfor %}
+                                              </tbody>
+                                              <tfoot>
+                                                  <tr>
+                                                      <th colspan="2" class="text-right">Sub Total:</th>
+                                                      <th class="text-center">{{order.paid_amount}} TND</th>
+                                                  </tr>
+                                                  <tr>
+                                                      <th colspan="2" class="text-right">shipping:</th>
+                                                      <th class="text-center">10 TND</th>
+                                                  </tr>
+
+                                                  <tr>
+                                                      <th colspan="2" class="text-right">Grand Total:</th>
+                                                      <th class="text-center">{{order.paid_amount}} TND</th>
+                                                  </tr>
+                                              </tfoot>
+                                          </table>
+                                      </div>
+                                  </div>
+                                  
+                              </div>
+                              <!-- col-lg-12 end here -->
+                          </div>
+                          <!-- End .row -->
+                      </div>
+                  </div>
+                  <!-- End .panel -->
+              </div>
+              <!-- col-lg-12 end here -->
+          </div>
+          </div>
+
+          <p class="fs-sm">You will be receiving an email shortly with confirmation of your order. <u>You can now:</u></p><a class="btn btn-secondary mt-3 me-3" href="{% url 'discover:home' %}">Go back shopping</a><a class="btn btn-primary mt-3" href="order-tracking.html"><i class="ci-location"></i>&nbsp;Track order</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+{% endblock  %}

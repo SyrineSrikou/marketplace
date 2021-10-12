@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block base %}
+    <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+        <div class="row">
+            <ol class="breadcrumb">
+                <li><a href="{% url 'adminshop:quantri' %}"><span class="glyphicon glyphicon-home"></span></a></li>
+                <li class="active">Danh sách sản phẩm</li>
+            </ol>
+        </div><!--/.row-->
+        <div class="row">
+            <div class="col-lg-12">
+                <h2 class="page-header text-center" style="color: #30a5ff"><img
+                        src="{% static 'images/icons/logo2.png' %}" style="max-height: 50px" alt="">Danh sách sản
+                    phẩm<img
+                            src="{% static 'images/icons/logo2.png' %}" style="max-height: 50px" alt=""></h2>
+                <div style="margin-bottom: 5px;direction: rtl">
+                    <a href="{% url 'adminshop:product-create' %}" class="btn btn-primary"
+                       style="margin-right: 50px;padding:10px 50px;font-size: 17px;">Thêm sản phẩm</a>
+                </div>
+            </div>
+        </div><!--/.row-->
+        <div>
+            {% if products %}
+                <table class="table table-bordered text-center">
+                    <tr style="text-align: center">
+                        <th class="text-center" style="width:4%">STT</th>
+                        <th class="text-center" style="width:10%">Mã</th>
+                        <th class="text-center" style="width:16%">Sản phẩm</th>
+                        <th class="text-center" style="width:10%">Mô tả</th>
+                        <th class="text-center" style="width:10%">Loại sản phẩm</th>
+                        <th class="text-center" style="width:7%">Trạng thái</th>
+                        <th class="text-center" style="width:16%">Giá</th>
+                        <th class="text-center" style="width:16%">Ảnh phụ</th>
+                        <th class="text-center" style="width:9%">Thao tác</th>
+                    </tr>
+
+                    {% for p in products %}
+                        <tr>
+                            <td class="text-center">{{ forloop.counter }}</td>
+                            <td class="text-center">{{ p.code }}</td>
+                            <td>
+                                {{ p.name }} <br>
+                                {% if p.image %}
+                                    <img style="width: 100px" src="{{ p.image.url }}" alt="Image Not Found"
+                                         class="img-thumbnail">
+                                {% endif %}
+                            </td>
+                            <td class="text-left">{{ p.description }}</td>
+                            <td>{{ p.TypeProducts.name }}</td>
+                            <td>
+                                {% if p.new == 1 %}
+                                    <label>Mới</label>
+                                {% else %}
+                                    <p>Cũ</p>
+                                {% endif %}
+                            </td>
+                            <td class="text-left">
+                                <label>Giá gốc :{{ p.unit_price }} VNĐ</label><br>
+                                <label>Giá KM:{{ p.promotion_price }} VNĐ</label>
+                            </td>
+                            <td>
+                                {% for i in p.images_set.all %}
+                                    {% if i.image %}
+                                        <img src="{{ i.image.url }}"
+                                             style="width: 30%;float: left;margin-right: 3px;margin-top: 10px;"
+                                             alt="Image Not Found" class="img-thumbnail">
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td class="text-center">
+                                <a title="Chỉnh sửa" href='{% url "adminshop:product-update" p.id %}'>Sửa</a>
+                                &nbsp;/
+                                <a title="Xóa" style="color:red" href='#' onclick="confirmDelete(this)"
+                                   url='{% url "adminshop:product-delete" p.id %}'>
+                                    Xóa
+                                </a>
+                            </td>
+
+                        </tr>
+                    {% endfor %}
+
+                </table>
+            {% else %}
+                <p>Không có dữ liệu</p>
+            {% endif %}
+        </div>
+    </div>
+    <script>
+        function confirmDelete(a) {
+            var url = a.getAttribute('url');
+            if (confirm('Bạn có chắc chắn muốn xóa không?')) {
+                location.href = url;
+            }
+        }
+    </script>
+{% endblock %}

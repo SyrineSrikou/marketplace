@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Used for marketplace templates with filters on top-->
+<div class="bg-accent pt-4 pb-5">
+    <div class="container pt-2 pb-3 pt-lg-3 pb-lg-4">
+      <div class="d-lg-flex justify-content-between pb-3">
+        <div class="order-lg-2 mb-3 mb-lg-0 pt-lg-2">
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-light flex-lg-nowrap justify-content-center justify-content-lg-start">
+              <li class="breadcrumb-item"><a class="text-nowrap" href="index.html"><i class="ci-home"></i>Home</a></li>
+              <li class="breadcrumb-item text-nowrap"><a href="home-marketplace.html">Products</a>
+              </li>
+              <li class="breadcrumb-item text-nowrap active" aria-current="page">Search</li>
+            </ol>
+          </nav>
+        </div>
+        <div class="order-lg-1 pe-lg-4 text-center text-lg-start">
+          <h1 class="h3 text-light mb-0">You searched for : {{ query }}</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+   
+   {% if products %}
+
+  {% for p in products %}
+<!-- Product-->
+<div class="col-lg-3 col-md-4 col-sm-6 px-2 mb-grid-gutter">
+  <div class="card product-card-alt">
+    <div class="product-thumb">
+      <button class="btn-wishlist btn-sm" type="button"><i class="ci-heart"></i></button>
+      <div class="product-card-actions"><a class="btn btn-light btn-icon btn-shadow fs-base mx-2" href="marketplace-single.html"><i class="ci-eye"></i></a>
+        <button class="btn btn-light btn-icon btn-shadow fs-base mx-2" type="button"><i class="ci-cart"></i></button>
+      </div><a class="product-thumb-overlay" href="marketplace-single.html"></a><img src="{{p.image.url}}" alt="Product">
+    </div>
+    <div class="card-body">
+      <div class="card-body py-2"><a class="product-meta d-block fs-xs pb-1" href="#">{{p.category}}</a>
+        <h3 class="product-title fs-base"><a href="shop-single-v1.html">{{p.name}}</a></h3>
+        <div class="d-flex justify-content-between">
+          <div class="product-price"><span class="text-accent">{{p.price}} TND</div>
+          <div class="star-rating"><i class="star-rating-icon ci-star-filled active"></i><i class="star-rating-icon ci-star-filled active"></i><i class="star-rating-icon ci-star-filled active"></i><i class="star-rating-icon ci-star-filled active"></i><i class="star-rating-icon ci-star-filled active"></i>
+          </div>
+        </div>
+          <button class="btn btn-primary btn-sm mb-2" type="button"><i class="ci-cart fs-sm me-1"></i>Add to Cart</button>
+          <div class="text-start"><a class="nav-link-style fs-ms"><i class="ci-eye align-middle me-1"></i>Quick view</a></div>
+        </div>
+      </div>
+    </div>
+  
+    </div>
+  </div>
+</div>
+
+{%endfor%}
+</div>
+</div>
+  {%else%}
+<h3> no products match your search ! </h3>
+
+
+{%endif%}
+      </div>
+    </div>
+    <hr class="my-3">
+
+  </div>
+
+
+{% endblock %}
